@@ -24,21 +24,9 @@ return {
   {
     "williamboman/mason.nvim",
     opts = {
-      ensure_installed = {
-        -- lsp
-        "lua-language-server",
-        "html-lsp",
-        "tailwindcss-language-server",
-        "typescript-language-server",
-        "css-lsp",
-        "pyright",
-        "rust-analyzer",
-        "jdtls",
-
-        -- formatter
-        "stylua",
-        "prettier",
-      },
+      -- LSPs and formatters are provided declaratively via
+      -- programs.nvchad.extraPackages in home/tui/nvim/default.nix
+      ensure_installed = {},
     },
   },
 
