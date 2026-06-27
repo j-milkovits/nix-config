@@ -1,0 +1,5 @@
+export XCURSOR_SIZE = 24
+# export XCURSOR_THEME = 
+# export GTK_THEME = 
+
+export LIBVA_DRIVER_NAME,nvidia

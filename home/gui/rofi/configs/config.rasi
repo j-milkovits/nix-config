@@ -1,0 +1,20 @@
+configuration {
+    location: 0;
+	  font: "FiraCode Nerd Font 12";
+    modes: "drun,run,ssh";
+    show-icons: true;
+    terminal: "kitty";
+    drun-display-format: "{icon} {name}";
+    disable-history: false;
+    display-drun: " 󰀻 Apps ";
+    display-run: "  Run ";
+	  display-ssh: "  SSH ";
+    sidebar-mode: true;
+	  ssh-client: "ssh";
+    ssh-command: "{terminal} -e {ssh-client} {host} [-p {port}]";
+    kb-mode-next: "Shift+Right,Tab";
+    kb-mode-previous: "Shift+Left";
+    kb-element-next: "";
+}
+
+@theme "catppuccin-mocha"
