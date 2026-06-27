@@ -17,20 +17,6 @@
     git
     vim
     wget
-
-    # TODO: move this
-    vscodium
-    firefox
-    font-awesome
-    obsidian
-    spotify
-    pavucontrol
-    pamixer
-    nixpkgs-fmt
-    libreoffice
-    bambu-studio
-    freecad
-    zapzap
   ];
 
   # setup zsh for all users
