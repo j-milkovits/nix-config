@@ -7,10 +7,11 @@
 ## Modularization
 > only relying on single `configuration.nix` & `home.nix` leads to major bloat 
 > split configuration into submodules and import submodules in main modules
-- hosts: specific configurations for each host (e.g. hostname)
+- hosts: specific configurations for each host (e.g. hostname, home profile)
 - home: reusable modules in **user** space (e.g. neovim)
+    - profiles: bundles per capability tier (e.g. base, gui)
 - modules: reusable modules in **system** space (e.g. nvidia)
-- users: setting up users by importing modules from Home
+- vars: shared values across the config (e.g. username, email)
 
 ## Key Principes
 - only install core components as NixOS modules that should be available to root aswell
@@ -33,17 +34,17 @@
 > assumes a working NixOS install with flakes enabled
 
 ### Install
-1. clone the repo to `~/.dotfiles`
-    - `git clone git@github.com:j-milkovits/.dotfiles.git ~/.dotfiles`
+1. clone the repo to `~/nix-config`
+    - `git clone git@github.com:j-milkovits/nix-config.git ~/nix-config`
 2. drop in your own `hardware-configuration.nix` under `hosts/<host>/`
 3. build and switch into the configuration
-    - `noglob sudo nixos-rebuild switch --flake ~/.dotfiles#<host>`
+    - `noglob sudo nixos-rebuild switch --flake ~/nix-config#<host>`
 
 ### Update
 1. bump all flake inputs to their latest revisions
-    - `nix flake update --flake ~/.dotfiles`
+    - `nix flake update --flake ~/nix-config`
 2. rebuild and switch into the new generation
-    - `noglob sudo nixos-rebuild switch --flake ~/.dotfiles#<host>`
+    - `noglob sudo nixos-rebuild switch --flake ~/nix-config#<host>`
 
 ## Why or why not?
 > should you get started with Nix(OS)?
