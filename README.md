@@ -7,11 +7,15 @@
 ## Modularization
 > only relying on single `configuration.nix` & `home.nix` leads to major bloat 
 > split configuration into submodules and import submodules in main modules
-- hosts: specific configurations for each host (e.g. hostname, home profile)
-- home: reusable modules in **user** space (e.g. neovim)
-    - profiles: bundles per capability tier (e.g. base, gui)
-- modules: reusable modules in **system** space (e.g. nvidia)
-- vars: shared values across the config (e.g. username, email)
+```
+.
+├── home/      # user-space (home-manager modules and profiles)
+├── hosts/     # per-machine NixOS configurations
+├── modules/   # system-space (NixOS modules)
+├── vars/      # shared values (identity, etc.)
+└── flake.nix  # entry point: inputs + nixosConfigurations
+```
+> see each directory's `README.md` for details
 
 ## Key Principes
 - only install core components as NixOS modules that should be available to root aswell
