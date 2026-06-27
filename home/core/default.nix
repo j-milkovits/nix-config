@@ -1,6 +1,11 @@
 { username
 , ...
 }: {
+  imports = [
+    ./git.nix
+    ./zsh
+  ];
+
   home = {
     inherit username;
     homeDirectory = "/home/${username}";

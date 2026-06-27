@@ -15,7 +15,7 @@
 
     # NvChad
     nvchad-starter = {
-      url = "path:./home/base/nvim/config";
+      url = "path:./home/tui/nvim/config";
       flake = false; # don't treat this folder as a flake
     };
     nix4nvchad = {

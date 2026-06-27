@@ -5,14 +5,20 @@
 ### Structure
 ```
 home/
-├── core.nix      # username, homeDirectory, stateVersion
-├── base/         # tools that go on every machine (git, nvim, zsh, ...)
+├── core/         # HM bootstrap + baseline (git, zsh)
+├── tui/          # terminal tools (btop, lazygit, nvim, ...)
 ├── gui/          # GUI-only modules (hyprland, kitty, rofi, waybar)
 ├── profiles/     # bundles per capability tier
-│   ├── base.nix  # core + base
-│   └── gui.nix   # base + gui
+│   ├── core.nix  # core
+│   ├── tui.nix   # core + tui
+│   └── gui.nix   # tui + gui
 └── README.md
 ```
+
+### Capability tiers
+- **core**: minimum baseline (e.g. vps)
+- **tui**: power-user terminal tooling (e.g. headless server)
+- **gui**: graphical apps and desktop environment
 
 ### How a host picks a profile
 - `hosts/<name>/home.nix` imports `home/profiles/<tier>.nix`

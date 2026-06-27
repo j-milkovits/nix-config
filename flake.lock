@@ -82,11 +82,11 @@
     "nvchad-starter": {
       "flake": false,
       "locked": {
-        "path": "./home/base/nvim/config",
+        "path": "./home/tui/nvim/config",
         "type": "path"
       },
       "original": {
-        "path": "./home/base/nvim/config",
+        "path": "./home/tui/nvim/config",
         "type": "path"
       },
       "parent": []

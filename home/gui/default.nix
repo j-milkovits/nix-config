@@ -1,8 +1,8 @@
 {
   imports = [
     ./hyprland
+    ./kitty.nix
     ./rofi
-    ./kitty
     ./waybar
   ];
 }
