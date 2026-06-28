@@ -17,7 +17,7 @@
 ```
 > see each directory's `README.md` for details
 
-## Key Principes
+## Key Principles
 - only install core components as NixOS modules that should be available to root aswell
 - install as much as possible as a home manager module
     - makes NixOS more secure and stable
