@@ -12,6 +12,7 @@
 ├── home/      # user-space (home-manager modules and profiles)
 ├── hosts/     # per-machine NixOS configurations
 ├── modules/   # system-space (NixOS modules)
+├── secrets/   # sops-encrypted values
 ├── vars/      # shared values (identity, etc.)
 └── flake.nix  # entry point: inputs + nixosConfigurations
 ```

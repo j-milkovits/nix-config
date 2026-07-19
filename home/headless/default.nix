@@ -11,6 +11,7 @@
     ./lazygit.nix
     ./network.nix
     ./nvim
+    ./secrets.nix
     ./tealdeer.nix
     ./tools.nix
     ./zoxide.nix
