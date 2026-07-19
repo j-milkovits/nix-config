@@ -2,11 +2,18 @@
 , ...
 }: {
   imports = [
+    ./bat.nix
     ./btop
     ./claude-code.nix
+    ./disk.nix
+    ./fzf.nix
     ./git.nix
     ./lazygit.nix
+    ./network.nix
     ./nvim
+    ./tealdeer.nix
+    ./tools.nix
+    ./zoxide.nix
     ./zsh
   ];
 

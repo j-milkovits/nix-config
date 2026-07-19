@@ -3,5 +3,6 @@
 }: {
   home.packages = with pkgs; [
     zapzap  # whatsapp client
+    discord
   ];
 }
