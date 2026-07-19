@@ -1,0 +1,20 @@
+{ ...
+}: {
+  imports = [
+    ../../modules/base
+    ../../modules/server
+
+    ./hardware-configuration.nix # include results of hardware scan
+  ];
+
+  networking.hostName = "server";
+
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
+
+  # before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html)
+  system.stateVersion = "26.05";
+}

@@ -3,9 +3,10 @@
 > each host folder is one NixOS configuration entry
 
 ### Inventory
-| Host      | Platform | Hardware       | Purpose    | Status    |
-| --------- | -------- | -------------- | ---------- | --------- |
-| `desktop` | NixOS    | AMD + NVIDIA   | Daily Use  | ✅ Active |
+| Host      | Platform | Hardware           | Purpose    | Status     |
+| --------- | -------- | ------------------ | ---------- | ---------- |
+| `desktop` | NixOS    | AMD + NVIDIA       | Daily Use  | ✅ Active  |
+| `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | 🚧 Planned |
 
 ### Adding a new host
 1. create `hosts/<name>/`

@@ -62,8 +62,30 @@
             ];
           };
 
+        server =
+          let
+            specialArgs = vars;
+          in
+          nixpkgs.lib.nixosSystem {
+            inherit specialArgs;
+
+            modules = [
+              ./hosts/server
+
+              home-manager.nixosModules.home-manager
+              {
+                home-manager = {
+                  useGlobalPkgs = true;
+                  useUserPackages = true;
+
+                  extraSpecialArgs = inputs // specialArgs;
+                  users."${vars.username}" = import ./hosts/server/home.nix;
+                };
+              }
+            ];
+          };
+
         # laptop =
-        # server =
         # wsl =
       };
     };

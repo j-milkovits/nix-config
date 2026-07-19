@@ -11,16 +11,20 @@ modules/
 │   ├── nix.nix        # nix.settings, gc, allowUnfree
 │   ├── i18n.nix       # timezone, locale
 │   ├── packages.nix   # root-level system packages
+│   ├── storage.nix    # drive management (smartctl, parted, ddrescue, ...)
 │   └── networking/
-│       └── firewall.nix
-└── desktop/           # workstation-only
-    ├── fonts.nix
-    ├── peripherals.nix # audio (pipewire), printing (CUPS)
-    ├── nvidia.nix
-    ├── hyprland.nix
-    └── networking/
-        ├── networkmanager.nix
-        └── tailscale.nix
+│       └── firewall.nix # on by default, hosts opt out
+├── desktop/           # workstation-only
+│   ├── fonts.nix
+│   ├── peripherals.nix # audio (pipewire), printing (CUPS)
+│   ├── nvidia.nix
+│   ├── hyprland.nix
+│   └── networking/
+│       ├── firewall.nix # desktop opts out of the firewall
+│       ├── networkmanager.nix
+│       └── tailscale.nix
+└── server/            # headless-server-only
+    └── ssh.nix        # hardened openssh (key only, no root)
 ```
 
 Each layer's `default.nix` imports its children, so hosts only need to pull in the layers they want:
@@ -39,4 +43,5 @@ imports = [
 ### When to put something in `base/` vs `desktop/`
 - `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall)
 - `desktop/`: only makes sense on a workstation (GPU driver, compositor, audio, font rendering)
-- future server/laptop/wsl hosts can opt into just `base/` and add their own peer-layer
+- `server/`: only makes sense on a headless machine (sshd, later: containers, smartd, backups)
+- future laptop/wsl hosts can opt into just `base/` and add their own peer-layer
