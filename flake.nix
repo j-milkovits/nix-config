@@ -23,6 +23,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nvchad-starter.follows = "nvchad-starter";
     };
+
+    # Claude Code
+    claude-code-nix.url = "github:sadjow/claude-code-nix";
   };
 
   outputs = { self, nixpkgs, home-manager, nix4nvchad, ... }@inputs:
