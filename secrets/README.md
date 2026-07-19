@@ -9,9 +9,16 @@
 - **sops-nix** (flake input): decrypts declared secrets at activation with the host's ssh key and places them under `/run/secrets/<name>` (tmpfs, never the nix store)
 
 ### Trust model
-- your personal age key decrypts everything
+- your personal age key decrypts everything → `~/.config/sops/age/keys.txt`
 - each host only decrypts files that `.sops.yaml` grants it
 - the repo itself can be public
+
+### Who decrypts with what
+| Identity | Key | Why |
+| --- | --- | --- |
+| you (editing with the sops cli) | `~/.config/sops/age/keys.txt`, found automatically | dedicated age key, independent of ssh |
+| server (sshd enabled) | its ssh host key, converted via ssh-to-age | exists from first boot, nothing to generate or distribute |
+| machine without sshd (desktop) | the personal `keys.txt`, via `sops.age.keyFile` | no host key exists when no sshd runs |
 
 ### Workflows
 ```bash

@@ -26,67 +26,53 @@
 
     # Claude Code
     claude-code-nix.url = "github:sadjow/claude-code-nix";
+
+    # secrets management
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix4nvchad, ... }@inputs:
     let
       vars = import ./vars;
+
+      # one host = one folder under hosts/, everything else is identical
+      mkHost = hostName:
+        nixpkgs.lib.nixosSystem {
+          # ensure that all submodules receive the non-default arguments
+          specialArgs = vars;
+
+          modules = [
+            ./hosts/${hostName}
+
+            # secrets management, defines the sops.* options
+            inputs.sops-nix.nixosModules.sops
+
+            # integrate home-manager as NixOS module
+            # this ensures that home-manager config will be deployed automatically on nixos-rebuild
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+
+                # pass arguments to home.nix
+                extraSpecialArgs = inputs // vars;
+                users."${vars.username}" = import ./hosts/${hostName}/home.nix;
+              };
+            }
+          ];
+        };
     in
     {
-      # could rewrite this to a function (see: https://github.com/notusknot/dotfiles-nix/blob/main/flake.nix)
       nixosConfigurations = {
-        desktop =
-          let
-            specialArgs = vars;
-          in
-          nixpkgs.lib.nixosSystem {
-            # ensure that all submodules receive the non-default arguments
-            inherit specialArgs;
+        desktop = mkHost "desktop";
+        server = mkHost "server";
 
-            modules = [
-              ./hosts/desktop
-
-              # integrate home-manager as NixOS module
-              # this ensures that home-manager config will be deployed automatically on nixos-rebuild
-              home-manager.nixosModules.home-manager
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-
-                  # pass arguments to home.nix
-                  extraSpecialArgs = inputs // specialArgs;
-                  users."${vars.username}" = import ./hosts/desktop/home.nix;
-                };
-              }
-            ];
-          };
-
-        server =
-          let
-            specialArgs = vars;
-          in
-          nixpkgs.lib.nixosSystem {
-            inherit specialArgs;
-
-            modules = [
-              ./hosts/server
-
-              home-manager.nixosModules.home-manager
-              {
-                home-manager = {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-
-                  extraSpecialArgs = inputs // specialArgs;
-                  users."${vars.username}" = import ./hosts/server/home.nix;
-                };
-              }
-            ];
-          };
-
-        # laptop =
-        # wsl =
+        # laptop = mkHost "laptop";
+        # wsl = mkHost "wsl";
       };
     };
 }

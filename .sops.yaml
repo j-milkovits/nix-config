@@ -1,0 +1,13 @@
+# who can decrypt what — see secrets/README.md
+keys:
+  # personal key, ~/.config/sops/age/keys.txt (backed up in password manager)
+  - &jonasm age1f52etgtfxt64a26kwulw5s894v5jpmahsssmt00j06lkz878q42sq02sj9
+  # post-install: ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub, then `sops updatekeys`
+  # - &server age1...
+
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *jonasm
+          # - *server
