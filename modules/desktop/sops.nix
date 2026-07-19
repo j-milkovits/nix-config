@@ -6,7 +6,4 @@
   sops.age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
 
   sops.defaultSopsFile = ../../secrets/desktop.yaml;
-
-  # proof of the pipeline, lands in /run/secrets/test after rebuild
-  sops.secrets.test = { };
 }
