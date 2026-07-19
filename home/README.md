@@ -5,19 +5,16 @@
 ### Structure
 ```
 home/
-├── core/         # HM bootstrap + baseline (git, zsh)
-├── tui/          # terminal tools (btop, lazygit, nvim, ...)
-├── gui/          # GUI-only modules (hyprland, kitty, rofi, waybar)
-├── profiles/     # bundles per capability tier
-│   ├── core.nix  # core
-│   ├── tui.nix   # core + tui
-│   └── gui.nix   # tui + gui
+├── headless/         # HM bootstrap + terminal environment (git, zsh, nvim, btop, ...)
+├── gui/              # GUI-only modules (hyprland, kitty, rofi, waybar)
+├── profiles/         # bundles per capability tier
+│   ├── headless.nix  # headless
+│   └── gui.nix       # headless + gui
 └── README.md
 ```
 
 ### Capability tiers
-- **core**: minimum baseline (e.g. vps)
-- **tui**: power-user terminal tooling (e.g. headless server)
+- **headless**: full terminal environment (e.g. server, vps)
 - **gui**: graphical apps and desktop environment
 
 ### How a host picks a profile

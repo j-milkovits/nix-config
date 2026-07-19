@@ -2,7 +2,11 @@
 , ...
 }: {
   imports = [
+    ./btop
+    ./claude-code.nix
     ./git.nix
+    ./lazygit.nix
+    ./nvim
     ./zsh
   ];
 

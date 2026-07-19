@@ -135,11 +135,11 @@
     "nvchad-starter": {
       "flake": false,
       "locked": {
-        "path": "./home/tui/nvim/config",
+        "path": "./home/headless/nvim/config",
         "type": "path"
       },
       "original": {
-        "path": "./home/tui/nvim/config",
+        "path": "./home/headless/nvim/config",
         "type": "path"
       },
       "parent": []

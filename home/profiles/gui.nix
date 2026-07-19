@@ -1,6 +1,6 @@
 {
   imports = [
-    ./tui.nix
+    ./headless.nix
 
     ../gui
   ];
