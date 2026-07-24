@@ -20,10 +20,6 @@
       # zshConfig = lib.mkOrder 1000 "";
       zshConfigLast = lib.mkOrder 1500 ''
         [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-
-        if uwsm check may-start; then
-            exec uwsm start hyprland-uwsm.desktop
-        fi
       '';
     in
       lib.mkMerge [zshConfigLast];
