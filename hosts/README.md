@@ -14,3 +14,4 @@
 3. write `default.nix` (start by copying an existing host)
 4. write `home.nix` selecting a profile from `home/profiles/`
 5. register the host in `flake.nix` under `nixosConfigurations`
+6. after first boot: enroll its ssh host key for secrets (see `secrets/README.md`)

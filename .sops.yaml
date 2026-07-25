@@ -1,13 +1,28 @@
-# who can decrypt what — see secrets/README.md
+# who can decrypt what - see secrets/README.md
+# after any change here: `sops updatekeys secrets/*.yaml`
 keys:
-  # personal key, ~/.config/sops/age/keys.txt (backed up in password manager)
-  - &jonasm age1f52etgtfxt64a26kwulw5s894v5jpmahsssmt00j06lkz878q42sq02sj9
-  # post-install: ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub, then `sops updatekeys`
-  # - &server age1...
+  # personal editing keys (~/.ssh/id_ed25519), one per machine you edit secrets on
+  # native ssh form: the cli's ssh support does NOT match ssh-to-age's age1... form
+  - &jonasm-desktop ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDtHD1iyc9XZ6VC8jQulrV/Lw9ilfq83SoaQiCscTc4r
+  # offline recovery key, lives only in the password manager, never deployed
+  # generate: ssh-keygen -t ed25519 -a 256 -C "jonasm@recovery" -f recovery_ed25519
+  # enroll:   ssh-to-age -i recovery_ed25519.pub
+  - &recovery age12r8utvz3puxqdg76j76tm82andmzfr7q0ara9tg3gquvqjvntvhqzhqa70
+  # host keys (ssh-to-age age1... form), post-install: ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
+  - &desktop age1jsgx98wc4fc70wcny732h5ga5gkf37zp7fve9vldy7aqns6sjqqskyxrw5
+  # - &server 
 
 creation_rules:
-  - path_regex: secrets/.*\.yaml$
+  # least privilege: each host's key only decrypts its own file
+  - path_regex: secrets/desktop\.yaml$
     key_groups:
       - age:
-          - *jonasm
+          - *jonasm-desktop
+          - *recovery
+          - *desktop
+  - path_regex: secrets/server\.yaml$
+    key_groups:
+      - age:
+          - *jonasm-desktop
+          - *recovery
           # - *server

@@ -3,38 +3,57 @@
 > safe to commit: values are ciphertext, only the yaml keys are readable
 
 ### How the pieces fit
-- **age**: does the actual encryption, one keypair per person
+- **age**: does the actual encryption, ssh ed25519 keys double as age keys (no separate age key material)
 - **sops**: encrypts the *values* of a yaml file to multiple recipients, `git diff` shows which secret changed but not its content
-- **ssh-to-age**: derives a host's age key from its ssh host key (`/etc/ssh/ssh_host_ed25519_key`), so machines need no extra key material
-- **sops-nix** (flake input): decrypts declared secrets at activation with the host's ssh key and places them under `/run/secrets/<name>` (tmpfs, never the nix store)
+- **ssh-to-age**: converts an ssh public key into the `age1...` recipient string sops-nix expects for host keys
+- **sops-nix** (flake input): decrypts declared secrets at activation with the host's ssh host key and places them under `/run/secrets/<name>` (tmpfs, never the nix store)
 
 ### Trust model
-- your personal age key decrypts everything → `~/.config/sops/age/keys.txt`
-- each host only decrypts files that `.sops.yaml` grants it
+> everything is an ssh ed25519 key, each private key is generated on the machine it lives on and never leaves it
+- a secret is encrypted to *all* recipients its creation rule lists, any single matching private key decrypts it
+- least privilege: one secrets file per host, a host's key is only a recipient of its own file
+- new recipients only apply on re-encryption → `sops updatekeys secrets/*.yaml` after every `.sops.yaml` change
 - the repo itself can be public
+
+### How a secrets file works (envelope encryption)
+> the yaml key names stay plaintext (diffable, referencable), only the values are ciphertext
+- the values are encrypted with a random one-off AES **data key**, not with age directly
+- the `sops:` block at the bottom holds that data key, wrapped once per recipient (`age:` list)
+- decrypting = unwrap your copy of the data key, then decrypt the values with it
+- `updatekeys` only re-wraps the data key for the current recipient list, values are untouched
+- `.sops.yaml` is pure policy for the cli: consulted at encrypt/rekey time, never read by hosts
 
 ### Who decrypts with what
 | Identity | Key | Why |
 | --- | --- | --- |
-| you (editing with the sops cli) | `~/.config/sops/age/keys.txt`, found automatically | dedicated age key, independent of ssh |
-| server (sshd enabled) | its ssh host key, converted via ssh-to-age | exists from first boot, nothing to generate or distribute |
-| machine without sshd (desktop) | the personal `keys.txt`, via `sops.age.keyFile` | no host key exists when no sshd runs |
+| you (editing with the sops cli) | `~/.ssh/id_ed25519`, found automatically | same key as for ssh login, one recipient per machine you edit secrets on |
+| every host (sshd runs everywhere) | its ssh host key (`/etc/ssh/ssh_host_ed25519_key`) | exists from first boot, nothing to generate or distribute |
+| recovery | offline ssh key, lives only in the password manager | last resort if every machine is lost, never deployed |
+
+> a machine that only *receives* secrets (server) needs no personal key as recipient -
+> your personal keys are purely for the cli editing workflow
+
+> two recipient notations in `.sops.yaml`: hosts use the ssh-to-age `age1...` form (what sops-nix
+> matches at activation), the personal key uses the native `ssh-ed25519 ...` form (what the sops
+> cli auto-detects from `~/.ssh/id_ed25519`) - they are not interchangeable
 
 ### Workflows
 ```bash
-# edit (or create) a secret file — opens $EDITOR with plaintext, re-encrypts on save
+# edit (or create) a secret file - opens $EDITOR with plaintext, re-encrypts on save
 sops secrets/<file>.yaml
 
 # reference it in a module
-sops.secrets."wireguard/server-private-key" = { };
-# → available at config.sops.secrets."wireguard/server-private-key".path
+sops.secrets."wireguard-private-key" = { };
+# → available at config.sops.secrets."wireguard-private-key".path
 
 # enroll a new host: get its age pubkey, add to .sops.yaml, re-wrap the files
 ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
-sops updatekeys secrets/<file>.yaml
+sops updatekeys secrets/*.yaml
 ```
 
 ### Disaster answers
-- lost personal key → restore `keys.txt` from the password manager backup
+- lost personal key → generate a new one, enroll it via a host key or the recovery key, `updatekeys`
 - reinstalled host (new ssh host key) → re-enroll like a new host, `sops updatekeys`
-- leaked personal key → generate new key, `updatekeys` everything, **rotate the secret values themselves** (updatekeys only re-wraps, history still decrypts with the old key)
+- every machine lost → restore the recovery key from the password manager, decrypt manually:
+  `SOPS_AGE_SSH_PRIVATE_KEY_FILE=<recovery-key> sops -d secrets/<file>.yaml`
+- leaked key → remove it from `.sops.yaml`, `updatekeys`, **rotate the secret values themselves** (updatekeys only re-wraps, git history still decrypts with the old key)
