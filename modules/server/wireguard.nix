@@ -9,13 +9,8 @@
     listenPort = 51820;
     privateKeyFile = config.sops.secrets."wireguard-private-key".path;
 
-    peers = [
-      {
-        # desktop
-        publicKey = "c8/3bs05TyPWzgc5+/BnYzLjgvGLGOz1TZOLI0h7oUA=";
-        allowedIPs = [ "10.100.0.2/32" ];
-      }
-    ];
+    # peers are added at enrollment, keys are generated on the client itself
+    peers = [ ];
   };
 
   networking.firewall.allowedUDPPorts = [ 51820 ];
