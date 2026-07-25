@@ -21,8 +21,7 @@ modules/
 │   ├── hyprland.nix
 │   └── networking/
 │       ├── firewall.nix # desktop opts out of the firewall
-│       ├── networkmanager.nix
-│       └── tailscale.nix
+│       └── networkmanager.nix
 └── server/            # headless-server-only
     └── ssh.nix        # hardened openssh (key only, no root)
 ```
