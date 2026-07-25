@@ -12,7 +12,7 @@
     peers = [
       {
         # desktop
-        publicKey = "TH/10kwyV9hny0HCsB2pISIdr9dPZFNqCxG7l9UCj1U=";
+        publicKey = "c8/3bs05TyPWzgc5+/BnYzLjgvGLGOz1TZOLI0h7oUA=";
         allowedIPs = [ "10.100.0.2/32" ];
       }
     ];
