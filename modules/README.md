@@ -8,6 +8,7 @@
 modules/
 ├── base/              # universal: applies to every host
 │   ├── user-group.nix # users, default shell (zsh)
+│   ├── ssh.nix        # hardened openssh (key only, no root), host key doubles as sops identity
 │   ├── nix.nix        # nix.settings, gc, allowUnfree
 │   ├── i18n.nix       # timezone, locale
 │   ├── packages.nix   # root-level system packages
@@ -19,11 +20,13 @@ modules/
 │   ├── peripherals.nix # audio (pipewire), printing (CUPS)
 │   ├── nvidia.nix
 │   ├── hyprland.nix
+│   ├── sops.nix       # points sops-nix at secrets/desktop.yaml
 │   └── networking/
 │       ├── firewall.nix # desktop opts out of the firewall
 │       └── networkmanager.nix
 └── server/            # headless-server-only
-    └── ssh.nix        # hardened openssh (key only, no root)
+    ├── sops.nix       # points sops-nix at secrets/server.yaml
+    └── wireguard.nix  # wireguard hub
 ```
 
 Each layer's `default.nix` imports its children, so hosts only need to pull in the layers they want:
@@ -40,7 +43,7 @@ imports = [
 - rule of thumb: smaller system surface = more secure, more portable
 
 ### When to put something in `base/` vs `desktop/`
-- `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall)
+- `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall, sshd)
 - `desktop/`: only makes sense on a workstation (GPU driver, compositor, audio, font rendering)
-- `server/`: only makes sense on a headless machine (sshd, later: containers, smartd, backups)
+- `server/`: only makes sense on a headless machine (wireguard hub, later: containers, smartd, backups)
 - future laptop/wsl hosts can opt into just `base/` and add their own peer-layer

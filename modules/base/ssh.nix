@@ -1,6 +1,8 @@
 { username
+, sshAuthorizedKeys
 , ...
 }: {
+  # runs on every host: the host key it generates doubles as the sops decryption identity
   services.openssh = {
     # opens port 22 in the firewall by default (openFirewall = true)
     enable = true;
@@ -13,7 +15,5 @@
     };
   };
 
-  users.users.${username}.openssh.authorizedKeys.keys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDzekmhsAB/sz6qzS51rYbgSiDVrV9BfBNpCtDojoZZ7 jonasm@desktop"
-  ];
+  users.users.${username}.openssh.authorizedKeys.keys = sshAuthorizedKeys;
 }

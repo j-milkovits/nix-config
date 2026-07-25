@@ -1,9 +1,4 @@
-{ username
-, ...
-}: {
-  # the desktop runs no sshd, so there is no host key to derive an age key
-  # from — decrypt with the personal age key instead
-  sops.age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
-
+{
+  # the ssh host key doubles as the age identity (sops-nix default when sshd is enabled)
   sops.defaultSopsFile = ../../secrets/desktop.yaml;
 }
