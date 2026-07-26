@@ -26,6 +26,11 @@
 
     # Claude Code
     claude-code-nix.url = "github:sadjow/claude-code-nix";
+    # mcp server: lets claude query nixos/home-manager options instead of guessing them
+    mcp-nixos = {
+      url = "github:utensils/mcp-nixos";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # secrets management
     sops-nix = {
