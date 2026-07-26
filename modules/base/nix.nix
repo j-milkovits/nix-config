@@ -1,11 +1,13 @@
 { lib
+, username
 , ...
 }: {
-  # allow specification of additional substituters
-  # nix.settings.trusted-users = [username];
-
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
+
+    # a trusted user may hand the daemon unsigned paths
+    # which is what a remote deploy does, since the closure is built on the desktop
+    trusted-users = [ username ];
 
     # appended to the default substituters (cache.nixos.org), not replacing them
     extra-substituters = [
