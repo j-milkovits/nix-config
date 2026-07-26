@@ -25,6 +25,7 @@ modules/
 │       ├── firewall.nix # desktop opts out of the firewall
 │       └── networkmanager.nix
 └── server/            # headless-server-only
+    ├── containers.nix # podman + oci-containers, one entry per service
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub
 ```
