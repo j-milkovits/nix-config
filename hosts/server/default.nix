@@ -4,6 +4,7 @@
     ../../modules/base
     ../../modules/server
 
+    ./disko.nix # data disk layout
     ./hardware-configuration.nix # include results of hardware scan
   ];
 
