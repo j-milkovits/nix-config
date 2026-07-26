@@ -25,7 +25,7 @@ modules/
 │       ├── firewall.nix # desktop opts out of the firewall
 │       └── networkmanager.nix
 └── server/            # headless-server-only
-    ├── containers.nix # podman + oci-containers, one entry per service
+    ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub
 ```
@@ -46,5 +46,5 @@ imports = [
 ### When to put something in `base/` vs `desktop/`
 - `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall, sshd)
 - `desktop/`: only makes sense on a workstation (GPU driver, compositor, audio, font rendering)
-- `server/`: only makes sense on a headless machine (wireguard hub, later: containers, smartd, backups)
+- `server/`: only makes sense on a headless machine (wireguard hub, containers, later: smartd, backups)
 - future laptop/wsl hosts can opt into just `base/` and add their own peer-layer
