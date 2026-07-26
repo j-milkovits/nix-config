@@ -3,6 +3,9 @@
   userFullName = "Jonas Milkovits";
   userEmail = "j.milkovits.t@posteo.net";
 
+  # domain registered at porkbun, homelab services are subdomains of home.<domain>
+  domain = "jonas-milkovits.com";
+
   # public keys that can log in to every host (referenced by modules/base/ssh.nix)
   # one key per client machine, generated locally there, the private key never leaves it
   sshAuthorizedKeys = [

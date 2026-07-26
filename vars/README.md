@@ -4,7 +4,7 @@
 ### Structure
 ```
 vars/
-├── default.nix  # identity (username, full name, email) + ssh public keys
+├── default.nix  # identity (username, full name, email), domain + ssh public keys
 └── README.md
 ```
 
