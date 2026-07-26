@@ -32,6 +32,12 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # declarative disk layout, hosts opt in by defining disko.devices
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, nix4nvchad, ... }@inputs:
@@ -49,6 +55,9 @@
 
             # secrets management, defines the sops.* options
             inputs.sops-nix.nixosModules.sops
+
+            # declarative disk layout, defines the disko.* options
+            inputs.disko.nixosModules.disko
 
             # integrate home-manager as NixOS module
             # this ensures that home-manager config will be deployed automatically on nixos-rebuild
