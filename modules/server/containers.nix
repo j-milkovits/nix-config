@@ -34,7 +34,8 @@ in
       # personal finance
       containers.actual = {
         image = "ghcr.io/actualbudget/actual:sha-3b2f89e@sha256:2d95396914c62212230d3cc7dd9f7bd9eba2da46696e5e4d4a6dfac4bdbaa5a1";
-        ports = [ "5006:5006" ];
+        # localhost only, caddy terminates tls in front of it (modules/server/proxy.nix)
+        ports = [ "127.0.0.1:5006:5006" ];
         volumes = [ "${stateDir "actual"}:/data" ];
         environment.TZ = "Europe/Berlin";
       };
@@ -43,7 +44,4 @@ in
 
   # nofail lets the boot continue without the data disk, so every container has to check for itself
   systemd.services = needsState [ "actual" ];
-
-  # lan only, the wireguard hub is the way in from outside
-  networking.firewall.allowedTCPPorts = [ 5006 ];
 }
