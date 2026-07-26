@@ -10,7 +10,7 @@ keys:
   - &recovery age12r8utvz3puxqdg76j76tm82andmzfr7q0ara9tg3gquvqjvntvhqzhqa70
   # host keys (ssh-to-age age1... form), post-install: ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
   - &desktop age1jsgx98wc4fc70wcny732h5ga5gkf37zp7fve9vldy7aqns6sjqqskyxrw5
-  # - &server 
+  - &server age1jcsdujm9mrfedd9nva98gh7fc37vcg5r4w5t4g3g92dps84cvensjtk99r
 
 creation_rules:
   # least privilege: each host's key only decrypts its own file
@@ -25,4 +25,4 @@ creation_rules:
       - age:
           - *jonasm-desktop
           - *recovery
-          # - *server
+          - *server
