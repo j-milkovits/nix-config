@@ -6,7 +6,7 @@
 | Host      | Platform | Hardware           | Purpose    | Status     |
 | --------- | -------- | ------------------ | ---------- | ---------- |
 | `desktop` | NixOS    | AMD + NVIDIA       | Daily Use  | ✅ Active  |
-| `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | 🚧 Planned |
+| `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | ✅ Active  |
 
 ### Adding a new host
 1. create `hosts/<name>/`
