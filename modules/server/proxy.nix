@@ -43,5 +43,10 @@ in
       # 127.0.0.1, not localhost: the container binds v4 only and localhost can resolve to ::1
       extraConfig = "reverse_proxy 127.0.0.1:5006";
     };
+
+    virtualHosts."mealie.${certName}" = {
+      useACMEHost = certName;
+      extraConfig = "reverse_proxy 127.0.0.1:9000";
+    };
   };
 }
