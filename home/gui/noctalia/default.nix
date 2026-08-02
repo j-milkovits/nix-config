@@ -103,8 +103,9 @@ in
           (group "gc2" "#74c7ec" [ "clock" ]) # sapphire
           (group "gc3" "#94e2d5" [ "media" ]) # teal
           (group "g5" "#a6e3a1" [ "keyboard_layout" "lock_keys" ]) # green
-          (group "g1" "#fab387" [ "net_down" "net_up" "network" ]) # peach
-          (group "g2" "#f38ba8" [ "cpu" "ram" "sysmon" ]) # red
+          # accordion: only the first member shows, hovering the capsule reveals the rest
+          (group "g1" "#fab387" [ "net_down" "net_up" "network" ] // { accordion = true; }) # peach
+          (group "g2" "#f38ba8" [ "cpu" "ram" "sysmon" ] // { accordion = true; }) # red
           (group "g3" "#f5c2e7" [ "volume" "mic" ]) # pink
           (group "g4" "#f5e0dc" [ "brightness" "battery" ]) # rosewater
         ];
@@ -113,7 +114,7 @@ in
       widget = {
         cpu = stat "cpu_usage";
         ram = stat "ram_pct";
-        net_up = stat "net_tx";
+        net_up = stat "net_tx" // { network_speed_compact = true; };
         net_down = stat "net_rx" // { network_speed_compact = true; };
         sysmon = { stat = "gpu_usage"; glyph = "matrix"; };
 
