@@ -15,15 +15,13 @@ modules/
 │   ├── storage.nix    # drive management (smartctl, parted, ddrescue, ...)
 │   └── networking/
 │       └── firewall.nix # on by default, hosts opt out
-├── desktop/           # workstation-only
+├── desktop/           # shared graphical config, nothing host-specific
 │   ├── fonts.nix
 │   ├── peripherals.nix # audio (pipewire), printing (CUPS), bluetooth
 │   ├── power.nix      # upower + power-profiles-daemon, both back a noctalia widget
-│   ├── nvidia.nix
+│   ├── graphics.nix   # hardware.graphics only, the driver lives in the host
 │   ├── hyprland.nix
-│   ├── sops.nix       # points sops-nix at secrets/desktop.yaml
 │   └── networking/
-│       ├── firewall.nix # desktop opts out of the firewall
 │       └── networkmanager.nix
 └── server/            # headless-server-only
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
@@ -47,6 +45,6 @@ imports = [
 
 ### When to put something in `base/` vs `desktop/`
 - `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall, sshd)
-- `desktop/`: only makes sense on a workstation (GPU driver, compositor, audio, font rendering)
+- `desktop/`: any graphical machine, workstation or laptop (compositor, audio, font rendering, bluetooth)
 - `server/`: only makes sense on a headless machine (wireguard hub, containers, later: smartd, backups)
 - future laptop/wsl hosts can opt into just `base/` and add their own peer-layer

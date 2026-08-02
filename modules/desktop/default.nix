@@ -3,9 +3,8 @@
     ./fonts.nix
     ./peripherals.nix
     ./power.nix
-    ./nvidia.nix
+    ./graphics.nix
     ./hyprland.nix
-    ./sops.nix
     ./networking
   ];
 }

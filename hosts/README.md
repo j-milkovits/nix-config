@@ -8,6 +8,18 @@
 | `desktop` | NixOS    | AMD + NVIDIA       | Daily Use  | ✅ Active  |
 | `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | ✅ Active  |
 
+### What a host folder owns
+> the layers under `modules/` are shared, so anything true of one machine only lives here
+
+| Concern | File | Why it cannot be shared |
+| --- | --- | --- |
+| GPU driver | `nvidia.nix` | a laptop is integrated intel/amd, `modules/desktop/graphics.nix` carries only `hardware.graphics` |
+| secrets file | `sops.nix` | hardcodes `secrets/<host>.yaml` |
+| firewall stance | `firewall.nix` | "trusted home network" is a claim about this lan, a roaming machine keeps the `base/` default |
+
+- `base/` sets `networking.firewall.enable = lib.mkDefault true`, so a host that says nothing is firewalled
+- opting out is a per-machine decision and has to be written down as one
+
 ### Storage on `server`
 
 ```

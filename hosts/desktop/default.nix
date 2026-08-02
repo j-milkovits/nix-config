@@ -7,6 +7,11 @@
     ../../modules/desktop
 
     ./hardware-configuration.nix # include results of hardware scan
+
+    # host-specific
+    ./nvidia.nix
+    ./sops.nix
+    ./firewall.nix
   ];
 
   networking.hostName = "desktop";
