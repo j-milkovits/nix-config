@@ -7,9 +7,8 @@
     ./kitty.nix
     ./media.nix
     ./messaging.nix
+    ./noctalia
     ./notes.nix
     ./office.nix
-    ./rofi
-    ./waybar
   ];
 }

@@ -17,7 +17,8 @@ modules/
 │       └── firewall.nix # on by default, hosts opt out
 ├── desktop/           # workstation-only
 │   ├── fonts.nix
-│   ├── peripherals.nix # audio (pipewire), printing (CUPS)
+│   ├── peripherals.nix # audio (pipewire), printing (CUPS), bluetooth
+│   ├── power.nix      # upower + power-profiles-daemon, both back a noctalia widget
 │   ├── nvidia.nix
 │   ├── hyprland.nix
 │   ├── sops.nix       # points sops-nix at secrets/desktop.yaml

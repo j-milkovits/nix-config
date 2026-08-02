@@ -7,8 +7,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    hyprpaper
-    rofi
     wl-clipboard
   ];
 

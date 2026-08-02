@@ -1,4 +1,5 @@
 { lib
+, pkgs
 , ...
 }:
 let
@@ -11,6 +12,9 @@ let
   # hl.bind(keys, dispatcher) and hl.bind(keys, dispatcher, flags)
   bind = keys: dispatcher: { _args = [ keys (mkLuaInline dispatcher) ]; };
   bindWith = keys: dispatcher: flags: { _args = [ keys (mkLuaInline dispatcher) flags ]; };
+
+  # every noctalia bind is an ipc call into the running shell
+  msg = command: "hl.dsp.exec_cmd(\"noctalia msg ${command}\")";
 
   # focus moves the view, window.move moves the window, both take a direction
   directions = [
@@ -32,9 +36,7 @@ let
     (lib.range 1 10);
 in
 {
-  # wallpaper, binary file
-  xdg.configFile."hypr/hyprpaper.conf".source = ./hyprpaper.conf;
-  xdg.configFile."hypr/wallpaper.png".source = ./wallpaper.png;
+  home.packages = [ pkgs.hyprpicker ];
 
   wayland.systemd.target = "hyprland-session.target";
 
@@ -66,17 +68,6 @@ in
       { _args = [ "XCURSOR_SIZE" "24" ]; }
       { _args = [ "HYPRCURSOR_SIZE" "24" ]; }
     ];
-
-    # start up
-    on = {
-      _args = [
-        "hyprland.start"
-        (mkLuaInline ''
-          function()
-            hl.exec_cmd("hyprpaper")
-          end'')
-      ];
-    };
 
     # the settings sections, everything hl.config understands
     config = {
@@ -168,8 +159,13 @@ in
       (bind "${mod} + Q" "hl.dsp.window.close()")
       (bind "${mod} + E" "hl.dsp.exec_cmd(\"${fileManager}\")")
       (bind "${mod} + SHIFT + F" "hl.dsp.window.float({ action = \"toggle\" })")
-      (bind "${mod} + R" "hl.dsp.exec_cmd(\"rofi -show drun\")")
       (bind "${mod} + SHIFT + C" "hl.dsp.exec_cmd(\"hyprpicker | wl-copy\")")
+    ]
+    ++ [
+      # noctalia panels
+      (bind "${mod} + R" (msg "panel-toggle launcher"))
+      (bind "${mod} + C" (msg "panel-toggle control-center"))
+      (bind "${mod} + M" (msg "panel-toggle session"))
     ]
     ++ focusBinds # move focus
     ++ moveBinds # move active window

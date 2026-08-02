@@ -28,6 +28,7 @@
 | Use Case                      | Application                       |
 | ----------------------------- | --------------------------------- |
 | **Window Manager**            | [Hyprland][Hyprland]              |
+| **Desktop Shell**             | [Noctalia][Noctalia]              |
 | **Terminal Emulator**         | [Kitty][Kitty]                    |
 | **Shell**                     | [Zsh][Zsh]                        |
 | **Plugin Manager**            | [Prezto][Prezto]                  |
@@ -104,9 +105,7 @@
 [Zsh]: https://www.zsh.org/
 [Prezto]: https://github.com/sorin-ionescu/prezto
 [Powerlevel10k]: https://github.com/romkatv/powerlevel10k
-[Waybar]: https://github.com/Alexays/Waybar
-[rofi]: https://github.com/davatorium/rofi
-[Dunst]: https://github.com/dunst-project/dunst
+[Noctalia]: https://github.com/noctalia-dev/noctalia
 [Btop]: https://github.com/aristocratos/btop
 [Neovim]: https://github.com/neovim/neovim
 [Hyprshot]: https://github.com/Gustash/Hyprshot

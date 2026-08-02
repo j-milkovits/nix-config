@@ -6,7 +6,7 @@
 ```
 home/
 ├── headless/         # HM bootstrap + terminal environment (git, zsh, nvim, btop, ...)
-├── gui/              # GUI-only modules (hyprland, kitty, rofi, waybar)
+├── gui/              # GUI-only modules (hyprland, noctalia, kitty, ...)
 ├── profiles/         # bundles per capability tier
 │   ├── headless.nix  # headless
 │   └── gui.nix       # headless + gui
