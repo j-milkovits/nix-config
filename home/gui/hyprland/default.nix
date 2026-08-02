@@ -36,8 +36,7 @@ in
   xdg.configFile."hypr/hyprpaper.conf".source = ./hyprpaper.conf;
   xdg.configFile."hypr/wallpaper.png".source = ./wallpaper.png;
 
-  # uwsm
-  xdg.configFile."uwsm/env".source = ./env;
+  wayland.systemd.target = "hyprland-session.target";
 
   wayland.windowManager.hyprland = {
     enable = true;
@@ -45,7 +44,9 @@ in
     # set the Hyprland and XDPH packages to null to use the ones from the NixOS module
     package = null;
     portalPackage = null;
-    systemd.enable = false; # for usage of uwsm
+
+    # owns hyprland-session.target, and imports the env into systemd and dbus
+    systemd.enable = true;
 
     configType = "lua"; # hyprlang is deprecated since 0.55
   };
@@ -59,6 +60,12 @@ in
       position = "auto";
       scale = "auto";
     };
+
+    # session environment, one call per variable
+    env = [
+      { _args = [ "XCURSOR_SIZE" "24" ]; }
+      { _args = [ "HYPRCURSOR_SIZE" "24" ]; }
+    ];
 
     # start up
     on = {
@@ -159,7 +166,6 @@ in
       # launch applications
       (bind "${mod} + Return" "hl.dsp.exec_cmd(\"${terminal}\")")
       (bind "${mod} + Q" "hl.dsp.window.close()")
-      (bind "${mod} + M" "hl.dsp.exec_cmd(\"uwsm stop\")") # uwsm specific - like exit
       (bind "${mod} + E" "hl.dsp.exec_cmd(\"${fileManager}\")")
       (bind "${mod} + SHIFT + F" "hl.dsp.window.float({ action = \"toggle\" })")
       (bind "${mod} + R" "hl.dsp.exec_cmd(\"rofi -show drun\")")
