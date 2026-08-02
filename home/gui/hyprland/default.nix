@@ -16,6 +16,10 @@ let
   # every noctalia bind is an ipc call into the running shell
   msg = command: "hl.dsp.exec_cmd(\"noctalia msg ${command}\")";
 
+  # media keys keep working over the lock screen, the ramping ones repeat when held
+  locked = { locked = true; };
+  ramping = { locked = true; repeating = true; };
+
   # focus moves the view, window.move moves the window, both take a direction
   directions = [
     { key = "left"; dir = "left"; }
@@ -153,6 +157,26 @@ in
       { leaf = "workspaces"; enabled = true; speed = 2; bezier = "easeOut"; style = "fade"; }
     ];
 
+    # the settings panel is a normal toplevel, so dwindle would tile it
+    window_rule = {
+      name = "noctalia-settings";
+      match = { class = "dev.noctalia.Noctalia"; };
+      float = true;
+      size = [ 1080 920 ];
+    };
+
+    # noctalia animates its own surfaces, hyprland's layer animations fight it
+    layer_rule = {
+      name = "noctalia";
+      match = {
+        namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$";
+      };
+      no_anim = true;
+      ignore_alpha = 0.5;
+      blur = true;
+      blur_popups = true;
+    };
+
     bind = [
       # launch applications
       (bind "${mod} + Return" "hl.dsp.exec_cmd(\"${terminal}\")")
@@ -166,6 +190,20 @@ in
       (bind "${mod} + R" (msg "panel-toggle launcher"))
       (bind "${mod} + C" (msg "panel-toggle control-center"))
       (bind "${mod} + M" (msg "panel-toggle session"))
+      (bind "${mod} + comma" (msg "settings-toggle"))
+    ]
+    ++ [
+      # media keys, routed through noctalia so its OSD fires with them
+      (bindWith "XF86AudioRaiseVolume" (msg "volume-up") ramping)
+      (bindWith "XF86AudioLowerVolume" (msg "volume-down") ramping)
+      (bindWith "XF86MonBrightnessUp" (msg "brightness-up") ramping)
+      (bindWith "XF86MonBrightnessDown" (msg "brightness-down") ramping)
+      (bindWith "XF86AudioMute" (msg "volume-mute") locked)
+      (bindWith "XF86AudioMicMute" (msg "mic-mute") locked)
+      (bindWith "XF86AudioNext" (msg "media next") locked)
+      (bindWith "XF86AudioPrev" (msg "media previous") locked)
+      (bindWith "XF86AudioPlay" (msg "media toggle") locked)
+      (bindWith "XF86AudioPause" (msg "media toggle") locked)
     ]
     ++ focusBinds # move focus
     ++ moveBinds # move active window
