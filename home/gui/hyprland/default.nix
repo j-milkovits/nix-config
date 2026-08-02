@@ -30,6 +30,9 @@ let
   focusBinds = map (d: bind "${mod} + ${d.key}" "hl.dsp.focus({ direction = \"${d.dir}\" })") directions;
   moveBinds = map (d: bind "${mod} + SHIFT + ${d.key}" "hl.dsp.window.move({ direction = \"${d.dir}\" })") directions;
 
+  workspaceIcons = [ "" "" "" "" "" "󰄭" "󰭹" "" "" "󰍹" ];
+  workspaceRules = lib.imap1 (i: icon: { workspace = toString i; default_name = icon; }) workspaceIcons;
+
   # workspace 10 sits on key 0
   workspaceBinds = lib.concatMap
     (i:
@@ -92,7 +95,7 @@ in
       };
 
       decoration = {
-        rounding = 5;
+        rounding = 10;
         inactive_opacity = 1;
 
         blur = {
@@ -157,6 +160,8 @@ in
       { leaf = "workspaces"; enabled = true; speed = 2; bezier = "easeOut"; style = "fade"; }
     ];
 
+    workspace_rule = workspaceRules;
+
     # the settings panel is a normal toplevel, so dwindle would tile it
     window_rule = {
       name = "noctalia-settings";
@@ -188,7 +193,8 @@ in
     ++ [
       # noctalia panels
       (bind "${mod} + R" (msg "panel-toggle launcher"))
-      (bind "${mod} + C" (msg "panel-toggle control-center"))
+      (bind "${mod} + H" (msg "panel-toggle control-center"))
+      (bind "${mod} + C" (msg "panel-toggle clipboard"))
       (bind "${mod} + M" (msg "panel-toggle session"))
       (bind "${mod} + comma" (msg "settings-toggle"))
     ]
