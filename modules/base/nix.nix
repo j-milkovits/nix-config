@@ -17,6 +17,8 @@
       "https://nixpkgs-unfree.cachix.org"
       # claude-code-nix flake (sadjow/claude-code-nix)
       "https://claude-code.cachix.org"
+      # noctalia shell flake (noctalia-dev/noctalia)
+      "https://noctalia.cachix.org"
     ];
     extra-trusted-public-keys = [
       # from https://app.cachix.org/cache/nix-community
@@ -25,6 +27,8 @@
       "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
       # from https://app.cachix.org/cache/claude-code
       "claude-code.cachix.org-1:YeXf2aNu7UTX8Vwrze0za1WEDS+4DuI2kVeWEE4fsRk="
+      # from https://app.cachix.org/cache/noctalia
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
     ];
   };
 

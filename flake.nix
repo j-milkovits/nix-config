@@ -32,6 +32,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # desktop shell (bar, launcher, notifications, lock screen, wallpaper)
+    # no follows to enable caching
+    noctalia.url = "github:noctalia-dev/noctalia";
+
     # secrets management
     sops-nix = {
       url = "github:Mic92/sops-nix";
