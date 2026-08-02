@@ -13,6 +13,7 @@
     ./nvim
     ./secrets.nix
     ./tealdeer.nix
+    ./theme.nix
     ./tools.nix
     ./zoxide.nix
     ./zsh

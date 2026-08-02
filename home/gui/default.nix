@@ -10,5 +10,6 @@
     ./noctalia
     ./notes.nix
     ./office.nix
+    ./theme.nix
   ];
 }

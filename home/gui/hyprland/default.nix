@@ -84,8 +84,8 @@ in
         gaps_out = 10;
 
         col = {
-          active_border = "rgb(b4befe)";
-          inactive_border = "rgba(1e1e2eaa)";
+          active_border = mkLuaInline "colors.accent";
+          inactive_border = mkLuaInline "'rgba(' .. colors.baseAlpha .. 'aa)'";
         };
 
         # master switch for tearing in games

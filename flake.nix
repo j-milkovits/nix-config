@@ -36,6 +36,12 @@
     # no follows to enable caching
     noctalia.url = "github:noctalia-dev/noctalia";
 
+    # one flavour behind one option, across ~80 home-manager modules
+    catppuccin = {
+      url = "github:catppuccin/nix/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # secrets management
     sops-nix = {
       url = "github:Mic92/sops-nix";

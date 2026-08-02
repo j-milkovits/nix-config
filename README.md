@@ -29,6 +29,7 @@
 | ----------------------------- | --------------------------------- |
 | **Window Manager**            | [Hyprland][Hyprland]              |
 | **Desktop Shell**             | [Noctalia][Noctalia]              |
+| **Theme**                     | [Catppuccin][catppuccin] Mocha    |
 | **Terminal Emulator**         | [Kitty][Kitty]                    |
 | **Shell**                     | [Zsh][Zsh]                        |
 | **Plugin Manager**            | [Prezto][Prezto]                  |
