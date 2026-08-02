@@ -27,7 +27,7 @@ modules/
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
     ├── proxy.nix      # caddy + acme wildcard cert, tls in front of every service (dns: hosts/README.md)
     ├── sops.nix       # points sops-nix at secrets/server.yaml
-    └── wireguard.nix  # wireguard hub
+    └── wireguard.nix  # wireguard hub, clients live in hosts/<host>/wireguard.nix
 ```
 
 Each layer's `default.nix` imports its children, so hosts only need to pull in the layers they want:

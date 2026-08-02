@@ -94,8 +94,7 @@
       nixosConfigurations = {
         desktop = mkHost "desktop";
         server = mkHost "server";
-
-        # laptop = mkHost "laptop";
+        laptop = mkHost "laptop";
         # wsl = mkHost "wsl";
       };
     };

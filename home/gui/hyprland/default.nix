@@ -67,7 +67,8 @@ in
       output = "";
       mode = "preferred";
       position = "auto";
-      scale = "auto";
+      # auto leads to bigger scale on smaller screens
+      scale = "1";
     };
 
     # session environment, one call per variable

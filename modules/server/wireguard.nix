@@ -17,6 +17,11 @@
         publicKey = "AH+D1ExWwPfHQhuo+uh8Ua7qZ/oU2RdECYd4Wa4ri30=";
         allowedIPs = [ "10.100.0.2/32" ];
       }
+      {
+        # laptop, client config in hosts/laptop/wireguard.nix
+        publicKey = "pIXk/r5KMNBeF6dkIgnMieK/EyZcluwU8ogcHvsMVks=";
+        allowedIPs = [ "10.100.0.3/32" ];
+      }
     ];
   };
 

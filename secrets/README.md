@@ -14,6 +14,7 @@
 - least privilege: one secrets file per host, a host's key is only a recipient of its own file
 - new recipients only apply on re-encryption → `sops updatekeys secrets/*.yaml` after every `.sops.yaml` change
 - the repo itself can be public
+- **editing happens on the desktop only**, no roaming machine gets a key that opens more than its own file
 
 ### How a secrets file works (envelope encryption)
 > the yaml key names stay plaintext (diffable, referencable), only the values are ciphertext
@@ -55,5 +56,8 @@ sops updatekeys secrets/*.yaml
 - lost personal key → generate a new one, enroll it via a host key or the recovery key, `updatekeys`
 - reinstalled host (new ssh host key) → re-enroll like a new host, `sops updatekeys`
 - every machine lost → restore the recovery key from the password manager, decrypt manually:
-  `SOPS_AGE_SSH_PRIVATE_KEY_FILE=<recovery-key> sops -d secrets/<file>.yaml`
+  `SOPS_AGE_KEY_CMD='ssh-to-age -private-key -i <recovery-key>' sops -d secrets/<file>.yaml`
+    - the recovery key is enrolled in the `age1...` form, so sops needs an age identity, not the ssh key itself
+    - a key enrolled in the native `ssh-ed25519 ...` form takes the other route instead:
+      `SOPS_AGE_SSH_PRIVATE_KEY_CMD='cat <key>' sops -d secrets/<file>.yaml`
 - leaked key → remove it from `.sops.yaml`, `updatekeys`, **rotate the secret values themselves** (updatekeys only re-wraps, git history still decrypts with the old key)

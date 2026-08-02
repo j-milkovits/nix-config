@@ -3,10 +3,11 @@
 > each host folder is one NixOS configuration entry
 
 ### Inventory
-| Host      | Platform | Hardware           | Purpose    | Status     |
-| --------- | -------- | ------------------ | ---------- | ---------- |
-| `desktop` | NixOS    | AMD + NVIDIA       | Daily Use  | ✅ Active  |
-| `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | ✅ Active  |
+| Host      | Platform | Hardware           | Purpose    | Status         |
+| --------- | -------- | ------------------ | ---------- | -------------- |
+| `desktop` | NixOS    | AMD + NVIDIA       | Daily Use  | ✅ Active      |
+| `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | ✅ Active      |
+| `laptop`  | NixOS    | Intel, integrated  | Mobile     | ✅ Active      |
 
 ### What a host folder owns
 > the layers under `modules/` are shared, so anything true of one machine only lives here
@@ -16,6 +17,8 @@
 | GPU driver | `nvidia.nix` | a laptop is integrated intel/amd, `modules/desktop/graphics.nix` carries only `hardware.graphics` |
 | secrets file | `sops.nix` | hardcodes `secrets/<host>.yaml` |
 | firewall stance | `firewall.nix` | "trusted home network" is a claim about this lan, a roaming machine keeps the `base/` default |
+| disk layout | `disko.nix` | one disk id, one machine |
+| vpn client | `wireguard.nix` | one address and one keypair per peer, the hub itself lives in `modules/server/` |
 
 - `base/` sets `networking.firewall.enable = lib.mkDefault true`, so a host that says nothing is firewalled
 - opting out is a per-machine decision and has to be written down as one
@@ -42,8 +45,16 @@
 | service names | `*.home.<domain>` → `192.168.178.85` | porkbun, one `A` record |
 | vpn endpoint | `<boxid>.myfritz.net:51820` | fritzbox, myfritz! ddns |
 
+| Peer | Address | Keys generated |
+| --- | --- | --- |
+| `server` (hub) | `10.100.0.1` | on the server, private half in `secrets/server.yaml` |
+| phone | `10.100.0.2` | in the app, only the public half ever entered the repo |
+| `laptop` | `10.100.0.3` | on the laptop, private half in `secrets/laptop.yaml` |
+
 - the record points at the *lan* address, not the wireguard one, so services work at home with no tunnel
 - roaming peers reach that same address over wireguard via `AllowedIPs = 10.100.0.0/24, 192.168.178.85/32`
+- the endpoint lives in `hosts/laptop/wireguard.nix`: wireguard never answers an unauthenticated packet, so an open 51820 discloses little, and the box has no remote admin
+- it is pinned to ipv4 and re-resolved on a timer, see the endpoint trap below
 - the `/32` scopes a peer to the server instead of the whole lan, and needs no forwarding or nat
 - the wildcard record covers every future service, so a new service needs no dns change
 
@@ -55,8 +66,13 @@
 - so every service needs its full hostname listed, `actual.home.<domain>` - the one manual step per service
 - wireguard forward: Internet → Freigaben → Portfreigaben → the host → udp 51820, ticked for ipv4 *and* ipv6
 - v4 is a real forward through nat, v6 is only a firewall release, the host is addressed directly
-- both are needed: mobile networks are often ipv6-first, so a v4-only forward fails away from home
-- the box hostname's `AAAA` is the fritzbox itself, so v6 clients need the per-device myfritz name to land on the host
+
+**the endpoint trap**
+> the box name's `A` reaches the forwarded server, its `AAAA` is the fritzbox
+
+- a resolver following rfc 6724 prefers the `AAAA`, so a v6-capable client hands its handshakes to the router
+- no public name resolves to the server over v6: fritzos mints per-device myfritz names only for its known application sharings, not for a raw udp port
+- so clients pin the family themselves, see the `wg0-endpoint` unit in `hosts/laptop/wireguard.nix`
 
 ### Adding a new host
 1. create `hosts/<name>/`
