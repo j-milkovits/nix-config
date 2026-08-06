@@ -26,14 +26,16 @@
 ### Storage on `server`
 
 ```
+/var/lib/<name>/      # host fs, service state: sqlite databases and config
 /mnt/data/            # ironwolf 4tb, ext4, addressed by disk id
-├── services/<name>/  # container state (e.g. sqlite, config), one dir per container
 └── media/            # bulk originals (e.g. immich library, paperless documents)
 ```
 
-- the split is the backup boundary: state is backed up with the service stopped, media streams live
-- mounted `nofail` - the drive sits in a usb enclosure, a bridge that fails to enumerate must not hold up the boot
-- so every container carries `RequiresMountsFor` on its state dir, see `modules/server/containers.nix`
+- the split is a durability boundary (usb bridges can be unreliable)
+- so databases stay on the m.2 and only write-once bulk goes on the external drive
+- it is a backup boundary too: state is dumped with the service stopped, media streams live
+- `/mnt/data` is mounted `nofail` - a bridge that fails to enumerate must not hold up the boot
+- so anything binding a path under it needs `RequiresMountsFor`, while `/var/lib` needs none, see `modules/server/containers.nix`
 
 ### Network on `server`
 > none of this is managed by nix, it lives in the fritzbox and at the registrar

@@ -4,8 +4,9 @@
 , ...
 }:
 let
-  # container state lives under services/
-  stateDir = name: "/mnt/data/services/${name}";
+  # sqlite state is stored on non-usb storages
+  # only write-once bulk belongs on /mnt/data
+  stateDir = name: "/var/lib/${name}";
 
   # containers inherit no /etc/localtime, so the host timezone has to be handed in
   # logs and anything scheduled (meal plans, budget rollovers) run on utc otherwise
@@ -13,13 +14,10 @@ let
 
   # podman refuses to start on a missing bind source instead of creating it like docker does
   # ExecStartPre is a list in oci-containers, and unit options merge by concatenation, so this appends
-  needsState = names: builtins.listToAttrs (map
+  ensureState = names: builtins.listToAttrs (map
     (name: {
       name = "podman-${name}";
-      value = {
-        unitConfig.RequiresMountsFor = stateDir name;
-        serviceConfig.ExecStartPre = [ "${pkgs.coreutils}/bin/mkdir -p ${stateDir name}" ];
-      };
+      value.serviceConfig.ExecStartPre = [ "${pkgs.coreutils}/bin/mkdir -p ${stateDir name}" ];
     })
     names);
 in
@@ -60,6 +58,6 @@ in
     };
   };
 
-  # nofail lets the boot continue without the data disk, so every container has to check for itself
-  systemd.services = needsState [ "actual" "mealie" ];
+  # /var/lib uses the root fs
+  systemd.services = ensureState [ "actual" "mealie" ];
 }
