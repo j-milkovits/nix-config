@@ -55,6 +55,15 @@ in
           ALLOW_SIGNUP = "false";
         };
       };
+
+      # twitch drop farming, a fork of the upstream gui app that ships a web ui instead
+      # parked, revive together with the drops vhost (modules/server/proxy.nix) and the ensureState entry below
+      # containers.twitch-drops-miner = {
+      #   image = "docker.io/rangermix/twitch-drops-miner:1.2.5@sha256:757f6031aed1d3f1975d439dc32646c7f6154c30d7f4fb9b6c6ac14c9e91127c";
+      #   ports = [ "127.0.0.1:8080:8080" ];
+      #   volumes = [ "${stateDir "twitch-drops-miner"}:/app/data" ];
+      #   environment = commonEnv;
+      # };
     };
   };
 
