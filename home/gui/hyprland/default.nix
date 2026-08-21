@@ -31,7 +31,41 @@ let
   moveBinds = map (d: bind "${mod} + SHIFT + ${d.key}" "hl.dsp.window.move({ direction = \"${d.dir}\" })") directions;
 
   workspaceIcons = [ "" "" "" "" "" "󰄭" "󰭹" "" "" "󰍹" ];
-  workspaceRules = lib.imap1 (i: icon: { workspace = toString i; default_name = icon; }) workspaceIcons;
+
+  # the desktop's two screens, matched on description prefix so a port swap cannot reorder them
+  # the laptop is single monitor, neither ever resolves there
+  desktopMonitors = {
+    left = "desc:HP Inc. OMEN 27qs";
+    right = "desc:Acer Technologies XF270HU";
+  };
+
+  workspaceMonitors = {
+    "8" = desktopMonitors.right;
+  };
+
+  # a bound workspace is also that monitor's default, so it comes up on it at login
+  workspaceRules = lib.imap1
+    (i: icon:
+      let ws = toString i; in
+      { workspace = ws; default_name = icon; }
+      // lib.optionalAttrs (workspaceMonitors ? ${ws}) {
+        monitor = workspaceMonitors.${ws};
+        default = true;
+      })
+    workspaceIcons;
+
+  # the exec rule binds to the spawned pid, so no window class matching
+  # silent places the window without dragging the focus along
+  autostart = [
+    { workspace = 1; command = "obsidian"; }
+    { workspace = 2; command = "firefox"; }
+    { workspace = 6; command = "todoist-electron"; }
+    { workspace = 7; command = "zapzap"; }
+    { workspace = 8; command = "spotify"; }
+  ];
+  autostartBody = lib.concatMapStringsSep "\n"
+    (a: "  hl.exec_cmd(\"${a.command}\", { workspace = \"${toString a.workspace} silent\" })")
+    autostart;
 
   # workspace 10 sits on key 0
   workspaceBinds = lib.concatMap
@@ -63,13 +97,29 @@ in
   # every attribute below becomes an `hl.<name>(...)` call, lists become one call each
   wayland.windowManager.hyprland.settings = {
     # monitors, one call per output
-    monitor = {
-      output = "";
-      mode = "preferred";
-      position = "auto";
-      # auto leads to bigger scale on smaller screens
-      scale = "1";
-    };
+    # an unnamed rule is the fallback, a named one wins wherever it resolves
+    monitor = [
+      {
+        output = "";
+        mode = "preferred";
+        position = "auto";
+        # auto leads to bigger scale on smaller screens
+        scale = "1";
+      }
+      # both panels advertise 60 Hz as preferred, so the rate has to be spelled out
+      {
+        output = desktopMonitors.left;
+        mode = "2560x1440@240";
+        position = "0x0";
+        scale = "1";
+      }
+      {
+        output = desktopMonitors.right;
+        mode = "2560x1440@144";
+        position = "2560x0";
+        scale = "1";
+      }
+    ];
 
     # session environment, one call per variable
     env = [
@@ -162,6 +212,18 @@ in
     ];
 
     workspace_rule = workspaceRules;
+
+    # lua has no exec-once, a bare hl.exec_cmd would respawn on every config reload
+    # hyprland.start fires once per session, after the first frame
+    on = {
+      _args = [
+        "hyprland.start"
+        (mkLuaInline ''
+          function()
+          ${autostartBody}
+          end'')
+      ];
+    };
 
     # the settings panel is a normal toplevel, so dwindle would tile it
     window_rule = {
