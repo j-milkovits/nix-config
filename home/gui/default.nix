@@ -10,6 +10,7 @@
     ./noctalia
     ./notes.nix
     ./office.nix
+    ./tasks.nix
     ./theme.nix
   ];
 }
