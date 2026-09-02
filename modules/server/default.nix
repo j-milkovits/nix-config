@@ -1,5 +1,6 @@
 {
   imports = [
+    ./backup.nix
     ./containers.nix
     ./paperless.nix
     ./proxy.nix
