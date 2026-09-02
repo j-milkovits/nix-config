@@ -1,3 +1,7 @@
+# format and mount, wipes the disk (run from the repo root):
+#   nix run github:nix-community/disko -- --mode destroy,format,mount hosts/laptop/disko.nix
+# mount only, for a reinstall onto the existing layout:
+#   nix run github:nix-community/disko -- --mode mount hosts/laptop/disko.nix
 { ...
 }: {
   disko.devices.disk.main = {

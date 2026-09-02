@@ -4,7 +4,7 @@
     ../../modules/base
     ../../modules/server
 
-    ./disko.nix # data disk layout
+    ./disko.nix # the two usb disks
     ./hardware-configuration.nix # include results of hardware scan
   ];
 

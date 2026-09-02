@@ -17,7 +17,7 @@
 | GPU driver | `nvidia.nix` | a laptop is integrated intel/amd, `modules/desktop/graphics.nix` carries only `hardware.graphics` |
 | secrets file | `sops.nix` | hardcodes `secrets/<host>.yaml` |
 | firewall stance | `firewall.nix` | "trusted home network" is a claim about this lan, a roaming machine keeps the `base/` default |
-| disk layout | `disko.nix` | one disk id, one machine |
+| disks | `disko.nix` | one disk id, one machine, plain mounts sit next to the disko block |
 | vpn client | `wireguard.nix` | one address and one keypair per peer, the hub itself lives in `modules/server/` |
 
 - `base/` sets `networking.firewall.enable = lib.mkDefault true`, so a host that says nothing is firewalled
@@ -27,15 +27,34 @@
 
 ```
 /var/lib/<name>/      # host fs, service state: sqlite databases and config
-/mnt/data/            # ironwolf 4tb, ext4, addressed by disk id
+/mnt/data/            # ironwolf 4tb, ext4
 └── media/            # bulk originals (e.g. immich library, paperless documents)
+/mnt/backup/          # my book 8tb, ext4
+├── archive/          # cold storage, a second copy lives on the barracuda in the desktop
+└── restic/           # restic repository, written by modules/server/backup.nix
 ```
 
 - the split is a durability boundary (usb bridges can be unreliable)
 - so databases stay on the m.2 and only write-once bulk goes on the external drive
 - it is a backup boundary too: state is dumped with the service stopped, media streams live
-- `/mnt/data` is mounted `nofail` - a bridge that fails to enumerate must not hold up the boot
-- so anything binding a path under it needs `RequiresMountsFor`, while `/var/lib` needs none, see `modules/server/containers.nix`
+- both usb mounts are `nofail` - a bridge that fails to enumerate must not hold up the boot
+- so anything binding a path under them needs `RequiresMountsFor`, while `/var/lib` needs none, see `modules/server/containers.nix` and `modules/server/backup.nix`
+- two bridges, so one failing takes down one filesystem, not both
+- archive and repository share the my book, losing it costs the backup history and archive copy 2 at once, both recoverable elsewhere
+
+#### Who owns which disk
+> three tools wrote the mounts, one rule decides which
+
+| Mount | Formatted by | Declared in | Addressed by |
+| --- | --- | --- | --- |
+| `/`, `/boot` | the installer, by hand | `hardware-configuration.nix` | uuid |
+| `/mnt/data` | disko | `disko.nix`, under `disko.devices` | the partlabel disko wrote |
+| `/mnt/backup` | `mkfs` by hand on the desktop | `disko.nix`, plain `fileSystems` | the label mkfs wrote |
+
+- a disk sits under `disko.devices` only if this config formatted it and may format it again, `destroy` mode wipes whatever disko owns
+- every mount is addressed by an identity on the disk, never a bus path: `sd*` reorders between boots and a `usb-*` id names the bridge, not the drive
+- `by-id` appears once per disk, as disko's format target, because at that point there is no filesystem to name yet
+- each `disko.nix` opens with the exact disko commands, the one that wipes and the one that only mounts
 
 ### Network on `server`
 > none of this is managed by nix, it lives in the fritzbox and at the registrar
