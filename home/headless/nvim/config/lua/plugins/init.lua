@@ -65,8 +65,17 @@ return {
         "yaml",
         "toml",
         "markdown",
+        "markdown_inline",
       },
     },
+  },
+
+  -- in-buffer markdown rendering
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown" },
+    opts = {},
   },
 
   -- copilot
