@@ -44,11 +44,10 @@ in
       extraConfig = "reverse_proxy 127.0.0.1:5006";
     };
 
-    # parked with the miner container (modules/server/containers.nix)
-    # virtualHosts."drops.${certName}" = {
-    #   useACMEHost = certName;
-    #   extraConfig = "reverse_proxy 127.0.0.1:8080";
-    # };
+    virtualHosts."drops.${certName}" = {
+      useACMEHost = certName;
+      extraConfig = "reverse_proxy 127.0.0.1:8080";
+    };
 
     virtualHosts."mealie.${certName}" = {
       useACMEHost = certName;

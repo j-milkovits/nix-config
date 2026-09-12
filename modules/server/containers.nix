@@ -57,16 +57,15 @@ in
       };
 
       # twitch drop farming, a fork of the upstream gui app that ships a web ui instead
-      # parked, revive together with the drops vhost (modules/server/proxy.nix) and the ensureState entry below
-      # containers.twitch-drops-miner = {
-      #   image = "docker.io/rangermix/twitch-drops-miner:1.2.5@sha256:757f6031aed1d3f1975d439dc32646c7f6154c30d7f4fb9b6c6ac14c9e91127c";
-      #   ports = [ "127.0.0.1:8080:8080" ];
-      #   volumes = [ "${stateDir "twitch-drops-miner"}:/app/data" ];
-      #   environment = commonEnv;
-      # };
+      containers.twitch-drops-miner = {
+        image = "docker.io/rangermix/twitch-drops-miner:1.2.6@sha256:4575f3c87bcd7bffb68d410638b0db4d2f6abd4982fb9cec6b429c3ee4cef3fb";
+        ports = [ "127.0.0.1:8080:8080" ];
+        volumes = [ "${stateDir "twitch-drops-miner"}:/app/data" ];
+        environment = commonEnv;
+      };
     };
   };
 
   # /var/lib uses the root fs
-  systemd.services = ensureState [ "actual" "mealie" ];
+  systemd.services = ensureState [ "actual" "mealie" "twitch-drops-miner" ];
 }
