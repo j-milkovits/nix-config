@@ -27,6 +27,7 @@ modules/
     ├── backup.nix     # restic to the my book, service state and the papra documents
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
     ├── proxy.nix      # caddy + acme wildcard cert, tls in front of every service (dns: hosts/README.md)
+    ├── scanner.nix    # chrooted sftp user for the brother, writes straight into papra's ingestion folder
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub, clients live in hosts/<host>/wireguard.nix
 ```
