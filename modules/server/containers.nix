@@ -88,8 +88,8 @@ in
           # sets the client and server urls at once, and the proxied name becomes a trusted origin
           APP_BASE_URL = "https://papra.home.${domain}";
           DOCUMENTS_OCR_LANGUAGES = "deu,eng";
-          # the first account registered becomes the admin, close this once it exists
-          AUTH_IS_REGISTRATION_ENABLED = "true";
+          # the one account exists and is the admin, nobody else gets to sign up
+          AUTH_IS_REGISTRATION_ENABLED = "false";
           # consumes whatever is dropped in ingestion/<org id>/, the level above it is ignored
           INGESTION_FOLDER_IS_ENABLED = "true";
         };
