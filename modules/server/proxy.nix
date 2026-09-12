@@ -54,9 +54,9 @@ in
       extraConfig = "reverse_proxy 127.0.0.1:9000";
     };
 
-    virtualHosts."paperless.${certName}" = {
+    virtualHosts."papra.${certName}" = {
       useACMEHost = certName;
-      extraConfig = "reverse_proxy 127.0.0.1:28981";
+      extraConfig = "reverse_proxy 127.0.0.1:1221";
     };
   };
 }

@@ -1,4 +1,5 @@
 { config
+, lib
 , pkgs
 , domain
 , ...
@@ -7,6 +8,10 @@ let
   # sqlite state is stored on non-usb storages
   # only write-once bulk belongs on /mnt/data
   stateDir = name: "/var/lib/${name}";
+
+  # papra keeps its documents as files next to the database, so both halves of the split apply
+  papraDocuments = "/mnt/data/media/papra/documents";
+  papraIngestion = "/mnt/data/media/papra/ingestion";
 
   # containers inherit no /etc/localtime, so the host timezone has to be handed in
   # logs and anything scheduled (meal plans, budget rollovers) run on utc otherwise
@@ -22,6 +27,16 @@ let
     names);
 in
 {
+  # signs the session cookies, rotating it logs every account out
+  sops.secrets."papra-auth-secret" = { };
+
+  # oci-containers passes environment values through the unit file, which lands in the nix store
+  # a rendered env file keeps the secret on the /run/secrets tmpfs instead
+  sops.templates."papra.env" = {
+    content = "AUTH_SECRET=${config.sops.placeholder."papra-auth-secret"}";
+    restartUnits = [ "podman-papra.service" ];
+  };
+
   # containers become systemd units, so they roll back with the generation
   virtualisation = {
     podman = {
@@ -56,6 +71,30 @@ in
         };
       };
 
+      # documents
+      containers.papra = {
+        # the -root variant, its -rootless twin runs as a system uid the bind mounts are not owned by
+        image = "ghcr.io/papra-hq/papra:26.6.2-root@sha256:4fffbfd03824b95cf34b98f38cd7e15fa49b82fa0c7c3496031df2cef94e9e1b";
+        ports = [ "127.0.0.1:1221:1221" ];
+        # app-data holds the database and the config dir, documents nest inside it
+        # podman orders binds by target depth, so the inner one lands on top of the outer
+        volumes = [
+          "${stateDir "papra"}:/app/app-data"
+          "${papraDocuments}:/app/app-data/documents"
+          "${papraIngestion}:/app/ingestion"
+        ];
+        environmentFiles = [ config.sops.templates."papra.env".path ];
+        environment = commonEnv // {
+          # sets the client and server urls at once, and the proxied name becomes a trusted origin
+          APP_BASE_URL = "https://papra.home.${domain}";
+          DOCUMENTS_OCR_LANGUAGES = "deu,eng";
+          # the first account registered becomes the admin, close this once it exists
+          AUTH_IS_REGISTRATION_ENABLED = "true";
+          # consumes whatever is dropped in ingestion/<org id>/, the level above it is ignored
+          INGESTION_FOLDER_IS_ENABLED = "true";
+        };
+      };
+
       # twitch drop farming, a fork of the upstream gui app that ships a web ui instead
       containers.twitch-drops-miner = {
         image = "docker.io/rangermix/twitch-drops-miner:1.2.6@sha256:4575f3c87bcd7bffb68d410638b0db4d2f6abd4982fb9cec6b429c3ee4cef3fb";
@@ -67,5 +106,18 @@ in
   };
 
   # /var/lib uses the root fs
-  systemd.services = ensureState [ "actual" "mealie" "twitch-drops-miner" ];
+  systemd.services = lib.mkMerge [
+    (ensureState [ "actual" "mealie" "papra" "twitch-drops-miner" ])
+    {
+      # /mnt/data is nofail, so without this papra can start with the bridge absent
+      # and write documents into the bare mountpoint
+      podman-papra = {
+        unitConfig.RequiresMountsFor = [ papraDocuments papraIngestion ];
+        # papra creates neither, and documents/ is the target of the nested bind
+        serviceConfig.ExecStartPre = [
+          "${pkgs.coreutils}/bin/mkdir -p ${stateDir "papra"}/db ${stateDir "papra"}/documents ${papraDocuments} ${papraIngestion}"
+        ];
+      };
+    }
+  ];
 }

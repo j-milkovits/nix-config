@@ -8,7 +8,10 @@ let
 
   # ext4 has no snapshots, a torn sqlite page costs the whole history, seconds of downtime cost nothing
   # moves together with paths below
-  stopUnits = [ "podman-actual" "podman-mealie" ];
+  stopUnits = [ "podman-actual" "podman-mealie" "podman-papra" ];
+
+  # the same path containers.nix binds into the container, scanned paper is the one bulk that cannot be rescanned
+  papraDocuments = "/mnt/data/media/papra/documents";
 
   systemctl = "${config.systemd.package}/bin/systemctl";
 in
@@ -20,11 +23,12 @@ in
     repository = "${backupMount}/restic";
     passwordFile = config.sops.secrets."restic-password".path;
 
-    # service state only, the document tool is undecided as of right now
-    # its database and media dir join here once it is, scanned paper is the one bulk that cannot be rescanned
+    # service state, plus the documents - the ingestion dir stays out, papra deletes from it once consumed
     paths = [
       "/var/lib/actual"
       "/var/lib/mealie"
+      "/var/lib/papra"
+      papraDocuments
     ];
 
     # first run creates the repository, every later one finds it
@@ -54,7 +58,7 @@ in
     checkOpts = [ "--read-data-subset=10%" ];
   };
 
-  # nofail mount, without this restic inits a fresh repository into the bare mountpoint and reports success
-  # /mnt/data joins the day a path under it enters paths, an absent source must fail the run, not back up an empty dir
-  systemd.services.restic-backups-local.unitConfig.RequiresMountsFor = [ backupMount ];
+  # both nofail: without the target restic inits a fresh repository into the bare mountpoint and reports success,
+  # without the source it snapshots an empty documents dir that retention then turns into the only copy
+  systemd.services.restic-backups-local.unitConfig.RequiresMountsFor = [ backupMount papraDocuments ];
 }

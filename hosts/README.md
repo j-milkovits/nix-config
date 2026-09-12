@@ -28,7 +28,7 @@
 ```
 /var/lib/<name>/      # host fs, service state: sqlite databases and config
 /mnt/data/            # ironwolf 4tb, ext4
-└── media/            # bulk originals (e.g. immich library, paperless documents)
+└── media/            # bulk originals (e.g. immich library, papra documents)
 /mnt/backup/          # my book 8tb, ext4
 ├── archive/          # cold storage, a second copy lives on the barracuda in the desktop
 └── restic/           # restic repository, written by modules/server/backup.nix

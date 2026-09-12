@@ -24,9 +24,8 @@ modules/
 │   └── networking/
 │       └── networkmanager.nix
 └── server/            # headless-server-only
-    ├── backup.nix     # restic to the my book, service state only until the document tool is chosen
+    ├── backup.nix     # restic to the my book, service state and the papra documents
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
-    ├── paperless.nix  # paperless-ngx, native rather than a container: four units sharing a data dir
     ├── proxy.nix      # caddy + acme wildcard cert, tls in front of every service (dns: hosts/README.md)
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub, clients live in hosts/<host>/wireguard.nix
