@@ -24,7 +24,7 @@ modules/
 │   └── networking/
 │       └── networkmanager.nix
 └── server/            # headless-server-only
-    ├── backup.nix     # restic to the my book, service state and the papra documents
+    ├── backup.nix     # restic, service state and the papra documents, nightly to the my book and to backblaze b2
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
     ├── proxy.nix      # caddy + acme wildcard cert, tls in front of every service (dns: hosts/README.md)
     ├── scanner.nix    # chrooted sftp user for the brother, writes straight into papra's ingestion folder

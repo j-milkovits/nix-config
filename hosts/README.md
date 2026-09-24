@@ -40,7 +40,8 @@
 - both usb mounts are `nofail` - a bridge that fails to enumerate must not hold up the boot
 - so anything binding a path under them needs `RequiresMountsFor`, while `/var/lib` needs none, see `modules/server/containers.nix` and `modules/server/backup.nix`
 - two bridges, so one failing takes down one filesystem, not both
-- archive and repository share the my book, losing it costs the backup history and archive copy 2 at once, both recoverable elsewhere
+- archive and repository share the my book, losing it costs archive copy 2 and the local backup history at once
+- the repository is copied to a backblaze b2 bucket after every local run, so the service state has a copy outside the house - the archive does not, the barracuda in the desktop is its only other copy
 
 #### Who owns which disk
 > three tools wrote the mounts, one rule decides which
