@@ -13,7 +13,7 @@
     extra-substituters = [
       # community packages (home-manager, nix4nvchad, NUR, ...)
       "https://nix-community.cachix.org"
-      # unfree packages that Hydra refuses to build (bambu-studio, ...)
+      # unfree packages that Hydra refuses to build (todoist-electron, ...)
       "https://nixpkgs-unfree.cachix.org"
       # claude-code-nix flake (sadjow/claude-code-nix)
       "https://claude-code.cachix.org"
