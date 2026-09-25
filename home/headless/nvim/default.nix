@@ -3,7 +3,7 @@
 , ...
 }: {
   imports = [
-    nix4nvchad.homeManagerModule
+    nix4nvchad.homeManagerModules.default
   ];
 
   programs.nvchad = {
