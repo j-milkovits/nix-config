@@ -44,6 +44,20 @@ in
       extraConfig = "reverse_proxy 127.0.0.1:5006";
     };
 
+    virtualHosts."dash.${certName}" = {
+      useACMEHost = certName;
+      # the backup status files from modules/server/backup.nix, served beside the dashboard that reads them
+      extraConfig = ''
+        handle_path /status/* {
+          root * /var/lib/backup-status
+          file_server
+        }
+        handle {
+          reverse_proxy 127.0.0.1:${toString config.services.homepage-dashboard.listenPort}
+        }
+      '';
+    };
+
     virtualHosts."drops.${certName}" = {
       useACMEHost = certName;
       extraConfig = "reverse_proxy 127.0.0.1:8080";
