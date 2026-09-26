@@ -1,5 +1,6 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 let
@@ -28,6 +29,19 @@ let
     "--keep-monthly 12"
     "--keep-yearly 3"
   ];
+
+  # one json per job, read by the dashboard (modules/server/dashboard.nix) through caddy (modules/server/proxy.nix)
+  statusDir = "/var/lib/backup-status";
+  # ExecStopPost runs after success and failure alike, systemd hands it $SERVICE_RESULT and $EXIT_STATUS
+  # a unit held back by RequiresMountsFor never runs, so nothing is written and the file just ages
+  # temp file + mv, the dashboard never reads a half-written file
+  writeStatus = job: pkgs.writeShellScript "backup-status-${job}" ''
+    tmp=$(${pkgs.coreutils}/bin/mktemp ${statusDir}/.${job}.XXXXXX)
+    printf '{"result":"%s","exit":"%s","finished":"%s"}\n' \
+      "$SERVICE_RESULT" "$EXIT_STATUS" "$(${pkgs.coreutils}/bin/date -Is)" > "$tmp"
+    ${pkgs.coreutils}/bin/chmod 0644 "$tmp"
+    ${pkgs.coreutils}/bin/mv "$tmp" ${statusDir}/${job}.json
+  '';
 in
 {
   sops.secrets."restic-password" = { };
@@ -99,6 +113,8 @@ in
       unitConfig.RequiresMountsFor = [ backupMount papraDocuments ];
       # chains the offsite copy to a finished local run, a failed one leaves b2 as it was
       unitConfig.OnSuccess = [ "restic-backups-offsite.service" ];
+      # appends to the module's own postStop, unit options merge by concatenation
+      serviceConfig.ExecStopPost = [ (writeStatus "local") ];
     };
 
     restic-backups-offsite = {
@@ -109,6 +125,10 @@ in
       preStart = lib.mkAfter ''
         ${restic} copy --from-repo ${localRepo} --from-password-file ${passwordFile}
       '';
+      serviceConfig.ExecStopPost = [ (writeStatus "offsite") ];
     };
   };
+
+  # world-readable, caddy serves it and the files hold nothing but a result and a timestamp
+  systemd.tmpfiles.rules = [ "d ${statusDir} 0755 root root -" ];
 }
