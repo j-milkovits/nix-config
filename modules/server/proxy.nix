@@ -46,10 +46,18 @@ in
 
     virtualHosts."dash.${certName}" = {
       useACMEHost = certName;
-      # the backup status files from modules/server/backup.nix, served beside the dashboard that reads them
+      # handle blocks are mutually exclusive and sorted by path specificity, so the bare one only takes the rest
       extraConfig = ''
-        handle_path /status/* {
+        # the backup status files from modules/server/backup.nix, served beside the dashboard that reads them
+        handle /status/* {
+          uri strip_prefix /status
           root * /var/lib/backup-status
+          file_server
+        }
+        # the pinned icons from modules/server/dashboard.nix
+        handle /icons/* {
+          uri strip_prefix /icons
+          root * /etc/homepage-dashboard/icons
           file_server
         }
         handle {
