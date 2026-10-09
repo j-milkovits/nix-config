@@ -10,5 +10,6 @@
     nvme-cli # the m.2 boot drive does not answer smartctl the same way
     parted # partitioning, what the nixos manual uses
     smartmontools # smartctl, on demand self tests and attributes
+    usbutils # lsusb, what hangs off the usb bus and how
   ];
 }
