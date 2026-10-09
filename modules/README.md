@@ -8,7 +8,7 @@
 modules/
 ├── base/              # universal: applies to every host
 │   ├── user-group.nix # users, default shell (zsh)
-│   ├── ssh.nix        # hardened openssh (key only, no root), host key doubles as sops identity
+│   ├── ssh.nix        # hardened openssh (key only, no root), host key doubles as sops identity, pins every host key as known
 │   ├── nix.nix        # nix.settings, gc, allowUnfree
 │   ├── i18n.nix       # timezone, locale
 │   ├── packages.nix   # root-level system packages
