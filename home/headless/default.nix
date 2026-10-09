@@ -12,6 +12,7 @@
     ./network.nix
     ./nvim
     ./secrets.nix
+    ./ssh.nix
     ./tealdeer.nix
     ./theme.nix
     ./tools.nix

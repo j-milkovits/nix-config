@@ -5,7 +5,7 @@
 ### Structure
 ```
 home/
-├── headless/         # HM bootstrap + terminal environment (git, zsh, nvim, btop, ...)
+├── headless/         # HM bootstrap + terminal environment (git, zsh, nvim, btop, ssh client, ...)
 ├── gui/              # GUI-only modules (hyprland, noctalia, kitty, ...)
 ├── profiles/         # bundles per capability tier
 │   ├── headless.nix  # headless
