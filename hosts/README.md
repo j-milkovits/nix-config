@@ -40,6 +40,7 @@
 - both usb mounts are `nofail` - a bridge that fails to enumerate must not hold up the boot
 - so anything binding a path under them needs `RequiresMountsFor`, while `/var/lib` needs none, see `modules/server/containers.nix` and `modules/server/backup.nix`
 - two bridges, so one failing takes down one filesystem, not both
+- the ironwolf's jms578 bridge is forced off `uas` onto `usb-storage` by a kernel param in `disko.nix`, the my book binds `usb-storage` on its own
 - archive and repository share the my book, losing it costs archive copy 2 and the local backup history at once
 - the repository is copied to a backblaze b2 bucket after every local run, so the service state has a copy outside the house - the archive does not, the barracuda in the desktop is its only other copy
 

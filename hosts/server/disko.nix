@@ -10,6 +10,10 @@
   # every mount is addressed by an identity on the disk (uuid, partlabel, label), never a bus path
 
   # data disk only - the m.2 root was partitioned by hand during the install
+  # the ironwolf's enclosure is a jmicron jms578, which the kernel binds to uas - that driver is where
+  # this chipset's resets under sustained load come from, bulk-only transport still outruns a spinning disk
+  boot.kernelParams = [ "usb-storage.quirks=152d:0578:u" ];
+
   disko.devices.disk.data = {
     type = "disk";
     # by-id is the format target, at this point there is no filesystem to name yet
