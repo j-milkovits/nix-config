@@ -14,7 +14,8 @@
 ├── modules/   # system-space (NixOS modules)
 ├── secrets/   # sops-encrypted values
 ├── vars/      # shared values (identity, etc.)
-└── flake.nix  # entry point: inputs + nixosConfigurations
+├── flake.nix  # entry point: inputs + nixosConfigurations
+└── justfile   # the everyday commands, `just` lists them
 ```
 > see each directory's `README.md` for details
 
