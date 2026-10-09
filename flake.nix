@@ -4,7 +4,8 @@
   inputs = {
     # official NixOS package source, using nixos's 26.05 branch by default
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    # nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # the few packages the stable channel cannot provide, taken per package and never as a whole (see mkHost)
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
 
     home-manager = {
@@ -63,7 +64,10 @@
       mkHost = hostName:
         nixpkgs.lib.nixosSystem {
           # ensure that all submodules receive the non-default arguments
-          specialArgs = vars;
+          specialArgs = vars // {
+            # single packages the stable channel cannot provide, immich for now - nothing else comes from here
+            pkgs-unstable = import inputs.nixpkgs-unstable { system = "x86_64-linux"; };
+          };
 
           modules = [
             ./hosts/${hostName}
