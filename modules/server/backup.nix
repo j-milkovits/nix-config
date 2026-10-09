@@ -10,10 +10,13 @@ let
 
   # ext4 has no snapshots, a torn sqlite page costs the whole history, seconds of downtime cost nothing
   # moves together with paths below
-  stopUnits = [ "podman-actual" "podman-mealie" "podman-papra" ];
+  # immich and its postgres go down together, systemd orders the stop and the start by their dependencies
+  stopUnits = [ "podman-actual" "podman-mealie" "podman-papra" "immich-server" "immich-machine-learning" "postgresql" ];
 
   # the same path containers.nix binds into the container, scanned paper is the one bulk that cannot be rescanned
   papraDocuments = "/mnt/data/media/papra/documents";
+  # the same path immich.nix hands to the module, originals and nothing else recreates them
+  immichLibrary = "/mnt/data/media/immich";
 
   systemctl = "${config.systemd.package}/bin/systemctl";
   restic = lib.getExe config.services.restic.backups.offsite.package;
@@ -61,12 +64,15 @@ in
       inherit passwordFile pruneOpts;
       repository = localRepo;
 
-      # service state, plus the documents - the ingestion dir stays out, papra deletes from it once consumed
+      # service state, plus the two bulk dirs - the ingestion dir stays out, papra deletes from it once consumed
+      # postgres is its stopped data dir, which restores onto the same major version only
       paths = [
         "/var/lib/actual"
         "/var/lib/mealie"
         "/var/lib/papra"
         papraDocuments
+        "/var/lib/postgresql"
+        immichLibrary
       ];
 
       # first run creates the repository, every later one finds it
@@ -108,9 +114,9 @@ in
 
   systemd.services = {
     # both nofail: without the target restic inits a fresh repository into the bare mountpoint and reports success,
-    # without the source it snapshots an empty documents dir that retention then turns into the only copy
+    # without a source it snapshots an empty bulk dir that retention then turns into the only copy
     restic-backups-local = {
-      unitConfig.RequiresMountsFor = [ backupMount papraDocuments ];
+      unitConfig.RequiresMountsFor = [ backupMount papraDocuments immichLibrary ];
       # chains the offsite copy to a finished local run, a failed one leaves b2 as it was
       unitConfig.OnSuccess = [ "restic-backups-offsite.service" ];
       # appends to the module's own postStop, unit options merge by concatenation

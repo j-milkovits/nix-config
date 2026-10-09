@@ -1,4 +1,5 @@
-{ pkgs
+{ config
+, pkgs
 , domain
 , ...
 }:
@@ -18,6 +19,7 @@ let
   icons = pkgs.linkFarm "dashboard-icons" [
     (icon "svg/actual-budget.svg" "sha256-bsZiGo0LafYi/xDX+VeiKflZ2U1LyMXjWGrr5xySJAc=")
     (icon "svg/mealie.svg" "sha256-HBUeq4UEeg1x8ShgZhRBkSavXBDlrAkRLNwQM7Yagz8=")
+    (icon "svg/immich.svg" "sha256-pdSkOJnmP/x+lyRgNPf2PN/cQQqoA8VxPVRSkGAcTYk=")
     (icon "svg/papra.svg" "sha256-YRm+T9QTOcVxYen+T02xykVwRDJaIWaywWoQBQ3LYfE=")
     (icon "svg/twitch.svg" "sha256-qOs2UUfWBuxJjqbmVeHhOX7lwL28CWRk1Jbm8vMaHGk=")
     (icon "png/restic.png" "sha256-KbtcVMIIxeF7h80mtJjj7mZ62Ui/wDFw/o2A+liBo2w=")
@@ -25,7 +27,7 @@ let
   ];
 
   # one link per service, the monitor checks the container directly instead of looping out through dns and caddy
-  # actual, mealie and papra show down around 03:00, the local backup stops them for the run
+  # actual, mealie, papra and immich show down around 03:00, the local backup stops them for the run
   service = { name, port, icon, description }: {
     inherit description;
     href = "https://${name}.home.${domain}";
@@ -79,7 +81,7 @@ in
       # a list, not an attrset: nix sorts attribute names, and the order here is the order on the page
       # row groups take the full width, so backups sit below services instead of beside them
       layout = [
-        { "Services" = { style = "row"; columns = 4; }; }
+        { "Services" = { style = "row"; columns = 5; }; }
         { "Backups" = { style = "row"; columns = 2; }; }
       ];
     };
@@ -90,6 +92,7 @@ in
           { "Actual" = service { name = "actual"; port = 5006; icon = "actual-budget.svg"; description = "budget"; }; }
           { "Mealie" = service { name = "mealie"; port = 9000; icon = "mealie.svg"; description = "recipes"; }; }
           { "Papra" = service { name = "papra"; port = 1221; icon = "papra.svg"; description = "documents"; }; }
+          { "Immich" = service { name = "immich"; port = config.services.immich.port; icon = "immich.svg"; description = "photos"; }; }
           { "Drops" = service { name = "drops"; port = 8080; icon = "twitch.svg"; description = "twitch drops"; }; }
         ];
       }

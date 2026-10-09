@@ -36,7 +36,7 @@
 
 - the split is a durability boundary (usb bridges can be unreliable)
 - so databases stay on the m.2 and only write-once bulk goes on the external drive
-- it is a backup boundary too: state is dumped with the service stopped, media streams live
+- it is a backup boundary too: state and bulk are both copied with their service stopped, but only state can tear on a live copy
 - both usb mounts are `nofail` - a bridge that fails to enumerate must not hold up the boot
 - so anything binding a path under them needs `RequiresMountsFor`, while `/var/lib` needs none, see `modules/server/containers.nix` and `modules/server/backup.nix`
 - two bridges, so one failing takes down one filesystem, not both
