@@ -92,6 +92,8 @@ in
           AUTH_IS_REGISTRATION_ENABLED = "false";
           # consumes whatever is dropped in ingestion/<org id>/, the level above it is ignored
           INGESTION_FOLDER_IS_ENABLED = "true";
+          # bytes, 50 MiB
+          DOCUMENT_STORAGE_MAX_UPLOAD_SIZE = toString (50 * 1024 * 1024);
         };
       };
 
