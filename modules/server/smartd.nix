@@ -29,8 +29,7 @@ in
     # -s short test saturdays 05:00, long test on the first of the month 05:00 - both after the 03:00 backup,
     #    a first that falls on a sunday shares the ironwolf with the immich integrity check for a few hours, reads both
     # -m <nomailer> -M exec: no mail, the hook posts to ntfy (modules/server/ntfy.nix)
-    # -M test: a message per disk on every start of smartd, proves the chain - drop it once the phone has seen it
-    defaults.monitored = "-a -o on -S on -n standby,q -s (S/../../6/05|L/../01/./05) -m <nomailer> -M exec ${hook} -M test";
+    defaults.monitored = "-a -o on -S on -n standby,q -s (S/../../6/05|L/../01/./05) -m <nomailer> -M exec ${hook}";
 
     # -d sat, both bridges pass the ata commands through
     devices = map (device: { inherit device; options = "-d sat"; }) disks;
