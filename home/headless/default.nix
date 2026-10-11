@@ -16,6 +16,7 @@
     ./tealdeer.nix
     ./theme.nix
     ./tools.nix
+    ./yazi.nix
     ./zoxide.nix
     ./zsh
   ];
