@@ -12,5 +12,6 @@
     ./office.nix
     ./tasks.nix
     ./theme.nix
+    ./zathura.nix
   ];
 }
