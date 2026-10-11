@@ -82,6 +82,11 @@ in
       extraConfig = "reverse_proxy 127.0.0.1:9000";
     };
 
+    virtualHosts."ntfy.${certName}" = {
+      useACMEHost = certName;
+      extraConfig = "reverse_proxy 127.0.0.1:2586";
+    };
+
     virtualHosts."papra.${certName}" = {
       useACMEHost = certName;
       extraConfig = "reverse_proxy 127.0.0.1:1221";

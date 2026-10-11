@@ -27,9 +27,12 @@ modules/
     ├── backup.nix     # restic, service state plus the papra documents and the immich library, nightly to the my book and to backblaze b2
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
     ├── dashboard.nix  # homepage, links to every service, host resources and the backup status backup.nix writes
+    ├── failures.nix   # OnFailure on every service unit, a crash is posted through ntfy.nix
     ├── immich.nix     # photos, the nixos module rather than a container: postgres and redis come wired up
+    ├── ntfy.nix       # push alerts to the phone, `ntfy-send` for anything on the box
     ├── proxy.nix      # caddy + acme wildcard cert, tls in front of every service (dns: hosts/README.md)
     ├── scanner.nix    # chrooted sftp user for the brother, writes straight into papra's ingestion folder
+    ├── smartd.nix     # watches the two usb disks, self-tests on saturdays, alerts through ntfy.nix
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub, clients live in hosts/<host>/wireguard.nix
 ```
@@ -50,5 +53,5 @@ imports = [
 ### When to put something in `base/` vs `desktop/`
 - `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall, sshd)
 - `desktop/`: any graphical machine, workstation or laptop (compositor, audio, font rendering, bluetooth)
-- `server/`: only makes sense on a headless machine (wireguard hub, containers, later: smartd, backups)
+- `server/`: only makes sense on a headless machine (wireguard hub, containers, smartd, backups)
 - future laptop/wsl hosts can opt into just `base/` and add their own peer-layer
