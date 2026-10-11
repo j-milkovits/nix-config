@@ -8,9 +8,9 @@ let
     "/dev/disk/by-id/ata-WDC_WD80EDAZ-11TA3A0_VDKT9ESK" # my book, /mnt/backup
   ];
 
-  # smartd hands the alert over in its environment
+  # smartd hands the alert over in its environment and runs the hook with a path of its own, hence the full path
   hook = pkgs.writeShellScript "smartd-ntfy" ''
-    ntfy-send "$SMARTD_SUBJECT" "$SMARTD_MESSAGE"
+    /run/current-system/sw/bin/ntfy-send "$SMARTD_SUBJECT" "$SMARTD_MESSAGE"
   '';
 in
 {
@@ -35,7 +35,4 @@ in
     # -d sat, both bridges pass the ata commands through
     devices = map (device: { inherit device; options = "-d sat"; }) disks;
   };
-
-  # the hook finds ntfy-send on the path smartd runs with
-  systemd.services.smartd.path = [ "/run/current-system/sw" ];
 }

@@ -13,7 +13,8 @@ let
   # posts over the loopback, so an alert does not depend on caddy or dns being up
   ntfySend = pkgs.writeShellApplication {
     name = "ntfy-send";
-    runtimeInputs = [ pkgs.curl ];
+    # smartd runs its hook with an empty path, so cat has to come along too
+    runtimeInputs = [ pkgs.coreutils pkgs.curl ];
     text = ''
       curl --silent --show-error --output /dev/null \
         --header "Authorization: Bearer $(cat ${config.sops.secrets."ntfy-token".path})" \
