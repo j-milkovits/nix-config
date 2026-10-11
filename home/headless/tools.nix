@@ -10,5 +10,6 @@
     yq-go # yaml processor
     ripgrep # grep replacement
     tree
+    unzip
   ];
 }
