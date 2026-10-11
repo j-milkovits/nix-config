@@ -160,7 +160,10 @@ in
       animations.enabled = true;
 
       input = {
-        kb_layout = "us";
+        # two layouts, cycled from the bar's keyboard_layout widget (home/gui/noctalia)
+        # us international first: umlauts and the euro sign via altgr, dead keys for accents - plain us second
+        kb_layout = "us,us";
+        kb_variant = "intl,";
 
         follow_mouse = 2;
 
