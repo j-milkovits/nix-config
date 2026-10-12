@@ -121,12 +121,6 @@ in
       }
     ];
 
-    # session environment, one call per variable
-    env = [
-      { _args = [ "XCURSOR_SIZE" "24" ]; }
-      { _args = [ "HYPRCURSOR_SIZE" "24" ]; }
-    ];
-
     # the settings sections, everything hl.config understands
     config = {
       general = {

@@ -36,4 +36,13 @@ in
   };
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
+  # the one port without a global enable - one cursor and one size for hyprland, gtk apps and xwayland
+  catppuccin.cursors.enable = true;
+  home.pointerCursor = {
+    size = 24;
+    gtk.enable = true;
+    hyprcursor.enable = true;
+    x11.enable = true;
+  };
 }
