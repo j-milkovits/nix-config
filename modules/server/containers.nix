@@ -12,6 +12,8 @@ let
   # papra keeps its documents as files next to the database, so both halves of the split apply
   papraDocuments = "/mnt/data/media/papra/documents";
   papraIngestion = "/mnt/data/media/papra/ingestion";
+  # uid and gid of the papra host user, 900 sits below everything the allocator hands out on the server
+  papraId = 900;
 
   # containers inherit no /etc/localtime, so the host timezone has to be handed in
   # logs and anything scheduled (meal plans, budget rollovers) run on utc otherwise
@@ -27,6 +29,14 @@ let
     names);
 in
 {
+  # the identity papra's process and files carry on the host, the other images drop root on their own
+  users.groups.papra.gid = papraId;
+  users.users.papra = {
+    isSystemUser = true;
+    uid = papraId;
+    group = "papra";
+  };
+
   # signs the session cookies, rotating it logs every account out
   sops.secrets."papra-auth-secret" = { };
 
@@ -73,8 +83,9 @@ in
 
       # documents
       containers.papra = {
-        # the -root variant, its -rootless twin runs as a system uid the bind mounts are not owned by
-        image = "ghcr.io/papra-hq/papra:26.6.2-root@sha256:4fffbfd03824b95cf34b98f38cd7e15fa49b82fa0c7c3496031df2cef94e9e1b";
+        image = "ghcr.io/papra-hq/papra:26.6.2-rootless@sha256:a281cb44176dbe5323e0f7ea2d6fd34d58914a3a8525c36437a086d1d7c4fef8";
+        # the host user below, so the process is not root on the host and its files are owned by a name
+        user = "${toString papraId}:${toString papraId}";
         ports = [ "127.0.0.1:1221:1221" ];
         # app-data holds the database and the config dir, documents nest inside it
         # podman orders binds by target depth, so the inner one lands on top of the outer
@@ -115,9 +126,11 @@ in
       # and write documents into the bare mountpoint
       podman-papra = {
         unitConfig.RequiresMountsFor = [ papraDocuments papraIngestion ];
-        # papra creates neither, and documents/ is the target of the nested bind
         serviceConfig.ExecStartPre = [
-          "${pkgs.coreutils}/bin/mkdir -p ${stateDir "papra"}/db ${stateDir "papra"}/documents ${papraDocuments} ${papraIngestion}"
+          # papra creates neither, and documents/ is the target of the nested bind - owned by papra, it writes there
+          "${pkgs.coreutils}/bin/install -d -o papra -g papra ${stateDir "papra"} ${stateDir "papra"}/db ${stateDir "papra"}/documents ${papraDocuments}"
+          # the ingestion root stays root-owned, sshd insists on that for the scanner's chroot (scanner.nix)
+          "${pkgs.coreutils}/bin/mkdir -p ${papraIngestion}"
         ];
       };
     }

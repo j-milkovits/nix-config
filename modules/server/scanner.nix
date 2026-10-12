@@ -34,7 +34,8 @@ in
     after = [ "podman-papra.service" ];
     unitConfig.RequiresMountsFor = [ ingestion ];
     serviceConfig.Type = "oneshot";
-    # papra runs as root in its container, so it reads and deletes the scanner's files regardless of owner
-    script = "install -d -m 0775 -o scanner -g scanner ${inbox}";
+    # papra's group on the folder with the inherit bit, so the scanner's uploads land group papra and the
+    # group-writable umask in the sshd block lets papra read and delete them (papra's user: containers.nix)
+    script = "install -d -m 2775 -o scanner -g papra ${inbox}";
   };
 }
