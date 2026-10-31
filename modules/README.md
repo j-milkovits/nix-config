@@ -10,12 +10,14 @@ modules/
 │   ├── user-group.nix # users, default shell (zsh)
 │   ├── ssh.nix        # hardened openssh (key only, no root), host key doubles as sops identity, pins every host key as known
 │   ├── nix.nix        # nix.settings, gc, allowUnfree
-│   ├── nix-ld.nix     # runs downloaded binaries (uv pythons, native node modules) that expect a normal linux
 │   ├── i18n.nix       # timezone, locale
 │   ├── packages.nix   # root-level system packages
 │   ├── storage.nix    # drive management (smartctl, parted, ddrescue, ...)
 │   └── networking/
 │       └── firewall.nix # on by default, hosts opt out
+├── dev/               # a development machine, imported by desktop, laptop and wsl, not the server
+│   ├── docker.nix     # docker, started on first use, the user in its group
+│   └── nix-ld.nix     # runs downloaded binaries (uv pythons, native node modules) that expect a normal linux
 ├── desktop/           # shared graphical config, nothing host-specific
 │   ├── fonts.nix
 │   ├── peripherals.nix # audio (pipewire), printing (CUPS), bluetooth
@@ -37,7 +39,7 @@ modules/
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub, clients live in hosts/<host>/wireguard.nix
 └── wsl/               # nixos as a wsl distribution on the work laptop
-    └── default.nix    # wsl.enable, docker, the clipboard bridge, windows path off
+    └── default.nix    # wsl.enable, the clipboard bridge, windows path off
 ```
 
 Each layer's `default.nix` imports its children, so hosts only need to pull in the layers they want:
@@ -56,6 +58,7 @@ imports = [
 ### When to put something in `base/` vs `desktop/`
 - `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall, sshd)
 - `desktop/`: any graphical machine, workstation or laptop (compositor, audio, font rendering, bluetooth)
+- `dev/`: what writing code needs at system level, docker and the loader shim - not on the server, whose podman already answers to `docker`
 - `server/`: only makes sense on a headless machine (wireguard hub, containers, smartd, backups)
 - `wsl/`: nixos inside windows, the host imports the base files it needs by name and leaves out sshd, storage and the firewall - it is cut off from the fleet on purpose
 - a host that is not a full member of the fleet, like `wsl`, picks base files by name instead of importing the layer
