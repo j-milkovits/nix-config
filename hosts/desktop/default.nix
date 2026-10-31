@@ -5,6 +5,7 @@
   imports = [
     ../../modules/base
     ../../modules/desktop
+    ../../modules/dev
 
     ./hardware-configuration.nix # include results of hardware scan
 

@@ -8,9 +8,9 @@
     # this box reaches nothing of the others and nothing of theirs lands on it
     ../../modules/base/user-group.nix
     ../../modules/base/nix.nix
-    ../../modules/base/nix-ld.nix
     ../../modules/base/i18n.nix
     ../../modules/base/packages.nix
+    ../../modules/dev
     ../../modules/wsl
   ];
 

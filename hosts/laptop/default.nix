@@ -3,6 +3,7 @@
   imports = [
     ../../modules/base
     ../../modules/desktop
+    ../../modules/dev
 
     ./disko.nix # root disk layout
     ./hardware-configuration.nix # include results of hardware scan
