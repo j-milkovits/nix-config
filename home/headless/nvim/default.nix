@@ -12,7 +12,7 @@
     extraPackages = with pkgs; [
       # LSPs
       lua-language-server
-      vscode-langservers-extracted   # html, css, json
+      vscode-langservers-extracted # html, css, json
       tailwindcss-language-server
       typescript-language-server
       pyright
@@ -22,8 +22,7 @@
       # Formatters
       stylua
       prettier
-      isort
-      black
+      ruff # formats and sorts imports, replaces black and isort
       rustfmt
       nixpkgs-fmt
     ];
