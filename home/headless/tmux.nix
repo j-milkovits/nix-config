@@ -27,6 +27,8 @@
       bind '"' split-window -v -c "#{pane_current_path}"
       bind % split-window -h -c "#{pane_current_path}"
       bind c new-window -c "#{pane_current_path}"
+      # picks up a switched config without leaving the session
+      bind r source-file ~/.config/tmux/tmux.conf \; display "config reloaded"
     '';
   };
 }
