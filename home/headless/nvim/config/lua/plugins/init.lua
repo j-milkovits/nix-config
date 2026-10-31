@@ -128,8 +128,11 @@ return {
   },
 
   {
-    -- the neovim half of tmux's vim-tmux-navigator plugin (home/headless/tmux.nix), ctrl + hjkl crosses both
+    -- the neovim half of the ctrl + arrow pane navigation in home/headless/tmux.nix, the keys are in mappings.lua
     "christoomey/vim-tmux-navigator",
     lazy = false,
+    init = function()
+      vim.g.tmux_navigator_no_mappings = 1
+    end,
   },
 }

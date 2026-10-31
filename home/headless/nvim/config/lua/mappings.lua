@@ -9,6 +9,12 @@ map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
 
+-- ctrl + arrows cross splits and tmux panes alike (home/headless/tmux.nix)
+map({ "n", "t" }, "<C-Left>", "<cmd>TmuxNavigateLeft<cr>")
+map({ "n", "t" }, "<C-Down>", "<cmd>TmuxNavigateDown<cr>")
+map({ "n", "t" }, "<C-Up>", "<cmd>TmuxNavigateUp<cr>")
+map({ "n", "t" }, "<C-Right>", "<cmd>TmuxNavigateRight<cr>")
+
 --- stay centered on searches
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
