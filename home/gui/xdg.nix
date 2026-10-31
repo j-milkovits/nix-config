@@ -4,6 +4,8 @@
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
+    # apps read the file, the shell needs no XDG_*_DIR variables
+    setSessionVariables = false;
     # never used on a tiling desktop, null keeps them out of the file and off the disk
     desktop = null;
     templates = null;
