@@ -18,8 +18,9 @@ M.base46 = {
 }
 
 M.ui = {
+  -- the buffer list drawn as tabs is noise, the statusline names the file and telescope jumps between buffers
   tabufline = {
-    order = { "treeOffset", "buffers", "tabs", "btns" },
+    enabled = false,
   },
   statusline = {
     theme = "default",
