@@ -126,4 +126,10 @@ return {
       focus_after_send = false,
     },
   },
+
+  {
+    -- the neovim half of tmux's vim-tmux-navigator plugin (home/headless/tmux.nix), ctrl + hjkl crosses both
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
+  },
 }

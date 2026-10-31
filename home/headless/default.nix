@@ -15,6 +15,7 @@
     ./ssh.nix
     ./tealdeer.nix
     ./theme.nix
+    ./tmux.nix
     ./tools.nix
     ./yazi.nix
     ./zoxide.nix
