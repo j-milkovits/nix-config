@@ -25,8 +25,8 @@ in
     };
 
     # short test saturdays 05:00, long test on the first of the month 05:00, a missed slot runs at the next check
-    # the my book's bridge answers no power query, so -n cannot skip it and every check is a wake-up
-    defaults.monitored = "-a -S on -n standby,q -s (S/../../6/05|L/../01/./05) -m <nomailer> -M exec ${hook}";
+    # -n skips a sleeping disk, at most seven times
+    defaults.monitored = "-a -S on -n standby,7,q -s (S/../../6/05|L/../01/./05) -m <nomailer> -M exec ${hook}";
 
     # -d sat, both bridges pass the ata commands through
     devices = map (device: { inherit device; options = "-d sat"; }) disks;
