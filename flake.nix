@@ -49,6 +49,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nixos as a wsl distribution, only the wsl host imports its module
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # declarative disk layout, hosts opt in by defining disko.devices
     disko = {
       url = "github:nix-community/disko";
@@ -64,7 +70,8 @@
       mkHost = hostName:
         nixpkgs.lib.nixosSystem {
           # ensure that all submodules receive the non-default arguments
-          specialArgs = vars // {
+          # the inputs too, so a host can import a module only it needs (hosts/wsl)
+          specialArgs = inputs // vars // {
             # single packages the stable channel cannot provide, immich for now - nothing else comes from here
             pkgs-unstable = import inputs.nixpkgs-unstable { system = "x86_64-linux"; };
           };
@@ -99,7 +106,7 @@
         desktop = mkHost "desktop";
         server = mkHost "server";
         laptop = mkHost "laptop";
-        # wsl = mkHost "wsl";
+        wsl = mkHost "wsl";
       };
     };
 }

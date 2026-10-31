@@ -8,6 +8,7 @@
 | `desktop` | NixOS    | AMD + NVIDIA       | Daily Use  | ✅ Active      |
 | `server`  | NixOS    | Dell OptiPlex 3070 | Homelab    | ✅ Active      |
 | `laptop`  | NixOS    | Intel, integrated  | Mobile     | ✅ Active      |
+| `wsl`     | NixOS-WSL | work laptop, windows | Work terminal | 🚧 Planned |
 
 ### What a host folder owns
 > the layers under `modules/` are shared, so anything true of one machine only lives here

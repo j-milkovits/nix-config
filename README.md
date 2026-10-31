@@ -33,6 +33,7 @@
 | `desktop` | the workstation | nvidia, two screens, builds the server's closure and pushes it |
 | `laptop` | the mobile one | wireguard client, reaches the server from anywhere |
 | `server` | the homelab | headless optiplex, see below |
+| `wsl` | the work laptop | nixos inside windows, the terminal environment and docker, no link to the others |
 
 > inventory and storage in [hosts/README.md](hosts/README.md)
 

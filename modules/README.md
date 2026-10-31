@@ -23,7 +23,7 @@ modules/
 │   ├── hyprland.nix
 │   └── networking/
 │       └── networkmanager.nix
-└── server/            # headless-server-only
+├── server/            # headless-server-only
     ├── backup.nix     # restic, service state plus the papra documents and the immich library, nightly to the my book and to backblaze b2
     ├── containers.nix # podman + oci-containers, one entry per service (storage: hosts/README.md)
     ├── dashboard.nix  # homepage, links to every service, host resources and the backup status backup.nix writes
@@ -35,6 +35,8 @@ modules/
     ├── smartd.nix     # watches the two usb disks, self-tests on saturdays, alerts through ntfy.nix
     ├── sops.nix       # points sops-nix at secrets/server.yaml
     └── wireguard.nix  # wireguard hub, clients live in hosts/<host>/wireguard.nix
+└── wsl/               # nixos as a wsl distribution on the work laptop
+    └── default.nix    # wsl.enable, docker, the clipboard bridge, windows path off
 ```
 
 Each layer's `default.nix` imports its children, so hosts only need to pull in the layers they want:
@@ -54,4 +56,5 @@ imports = [
 - `base/`: would apply to a server, laptop, or wsl box too (users, locale, nix daemon, firewall, sshd)
 - `desktop/`: any graphical machine, workstation or laptop (compositor, audio, font rendering, bluetooth)
 - `server/`: only makes sense on a headless machine (wireguard hub, containers, smartd, backups)
-- future laptop/wsl hosts can opt into just `base/` and add their own peer-layer
+- `wsl/`: nixos inside windows, the host imports the base files it needs by name and leaves out sshd, storage and the firewall - it is cut off from the fleet on purpose
+- a host that is not a full member of the fleet, like `wsl`, picks base files by name instead of importing the layer
