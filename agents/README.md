@@ -5,7 +5,8 @@
 ```
 agents/
 ├── global-rules.md   # how an agent works for me, on any repo - becomes ~/.claude/CLAUDE.md
-├── skills/           # one folder per skill with a SKILL.md (Agent Skills format), linked into ~/.claude/skills/ - none yet
+├── skills/           # one folder per skill with a SKILL.md (Agent Skills format), linked into ~/.claude/skills/
+│   └── mealie-import/  # recipes into the self-hosted Mealie, mapped onto the curated vocabulary
 └── README.md
 ```
 
