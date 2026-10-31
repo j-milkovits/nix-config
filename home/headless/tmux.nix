@@ -1,7 +1,18 @@
-{ pkgs
+{ config
+, lib
+, pkgs
 , ...
-}: {
-  # the flavour comes with catppuccin.enable in theme.nix
+}:
+let
+  # the catppuccin palette as hex, the same source the ports render from (theme.nix)
+  palette = (lib.importJSON "${config.catppuccin.sources.palette}/palette.json").${config.catppuccin.flavor}.colors;
+  c = name: palette.${name}.hex;
+  accent = c config.catppuccin.accent;
+in
+{
+  # the catppuccin tmux plugin is loud, powerline blocks for what only says where you are - the bar below is text
+  catppuccin.tmux.enable = false;
+
   programs.tmux = {
     enable = true;
     prefix = "C-Space";
@@ -11,6 +22,7 @@
     escapeTime = 0;
     historyLimit = 50000;
     terminal = "tmux-256color";
+    clock24 = true;
 
     plugins = with pkgs.tmuxPlugins; [
       # copies to the system clipboard from copy mode
@@ -36,6 +48,20 @@
       bind -n C-Down  if-shell "$is_vim" 'send-keys C-Down'  'select-pane -D'
       bind -n C-Up    if-shell "$is_vim" 'send-keys C-Up'    'select-pane -U'
       bind -n C-Right if-shell "$is_vim" 'send-keys C-Right' 'select-pane -R'
+
+      # the bar: transparent, the session in the accent, the current window underlined, the clock on the right
+      set -g status-style "fg=${c "subtext0"},bg=default"
+      set -g status-left-length 100
+      set -g status-left "#[fg=${accent},bold]  #S #[fg=${c "surface1"},nobold]│ "
+      set -g status-right "#[fg=${c "overlay1"}]%a %d %b  %H:%M "
+      set -g window-status-format " #I #W "
+      set -g window-status-current-format "#[fg=${accent},bold,underscore] #I #W #[nounderscore]"
+      set -g window-status-separator ""
+      # the same restraint for what tmux draws itself
+      set -g message-style "fg=${c "text"},bg=default"
+      set -g mode-style "fg=${c "base"},bg=${c "blue"}"
+      set -g pane-border-style "fg=${c "surface0"}"
+      set -g pane-active-border-style "fg=${c "overlay0"}"
     '';
   };
 }
