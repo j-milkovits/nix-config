@@ -9,11 +9,13 @@
 > split configuration into submodules and import submodules in main modules
 ```
 .
+├── agents/    # agent rules and skills, tool-agnostic (see agents/README.md)
 ├── home/      # user-space (home-manager modules and profiles)
 ├── hosts/     # per-machine NixOS configurations
 ├── modules/   # system-space (NixOS modules)
 ├── secrets/   # sops-encrypted values
 ├── vars/      # shared values (identity, etc.)
+├── AGENTS.md  # what an agent needs to know about this repo, CLAUDE.md imports it
 ├── flake.nix  # entry point: inputs + nixosConfigurations
 └── justfile   # the everyday commands, `just` lists them
 ```
