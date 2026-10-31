@@ -5,6 +5,7 @@
     ./bat.nix
     ./btop
     ./claude-code.nix
+    ./dev.nix
     ./disk.nix
     ./fzf.nix
     ./git.nix

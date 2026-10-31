@@ -10,6 +10,7 @@ modules/
 │   ├── user-group.nix # users, default shell (zsh)
 │   ├── ssh.nix        # hardened openssh (key only, no root), host key doubles as sops identity, pins every host key as known
 │   ├── nix.nix        # nix.settings, gc, allowUnfree
+│   ├── nix-ld.nix     # runs downloaded binaries (uv pythons, native node modules) that expect a normal linux
 │   ├── i18n.nix       # timezone, locale
 │   ├── packages.nix   # root-level system packages
 │   ├── storage.nix    # drive management (smartctl, parted, ddrescue, ...)
