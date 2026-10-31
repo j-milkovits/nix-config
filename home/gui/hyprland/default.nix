@@ -222,13 +222,21 @@ in
       ];
     };
 
-    # the settings panel is a normal toplevel, so dwindle would tile it
-    window_rule = {
-      name = "noctalia-settings";
-      match = { class = "dev.noctalia.Noctalia"; };
-      float = true;
-      size = [ 1080 920 ];
-    };
+    window_rule = [
+      # the settings panel is a normal toplevel, so dwindle would tile it
+      {
+        name = "noctalia-settings";
+        match = { class = "dev.noctalia.Noctalia"; };
+        float = true;
+        size = [ 1080 920 ];
+      }
+      # a maximised window keeps its border, this colour is what tells it apart from a lone tiled one
+      {
+        name = "fullscreen-border";
+        match = { fullscreen = true; };
+        border_color = mkLuaInline "colors.peach";
+      }
+    ];
 
     # noctalia animates its own surfaces, hyprland's layer animations fight it
     layer_rule = {
@@ -248,6 +256,7 @@ in
       (bind "${mod} + Q" "hl.dsp.window.close()")
       (bind "${mod} + E" "hl.dsp.exec_cmd(\"${fileManager}\")")
       (bind "${mod} + SHIFT + F" "hl.dsp.window.float({ action = \"toggle\" })")
+      (bind "${mod} + F" "hl.dsp.window.fullscreen({ action = \"toggle\", mode = \"maximized\" })")
       (bind "${mod} + SHIFT + C" "hl.dsp.exec_cmd(\"hyprpicker | wl-copy\")")
     ]
     ++ [
