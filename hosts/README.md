@@ -19,6 +19,7 @@
 | firewall stance | `firewall.nix` | "trusted home network" is a claim about this lan, a roaming machine keeps the `base/` default |
 | disks | `disko.nix` | one disk id, one machine, plain mounts sit next to the disko block |
 | vpn client | `wireguard.nix` | one address and one keypair per peer, the hub itself lives in `modules/server/` |
+| desktop effects | `home.nix` | blur and shadows cost battery on every frame, only the laptop turns them off, the desktop has a gpu to spare |
 
 - `base/` sets `networking.firewall.enable = lib.mkDefault true`, so a host that says nothing is firewalled
 - opting out is a per-machine decision and has to be written down as one
