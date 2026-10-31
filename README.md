@@ -25,6 +25,34 @@
     - makes NixOS more secure and stable
     - makes user space more portable to other non-NixOS systems
 
+## Hosts
+> three machines from one flake, the shared layers under `modules/` and `home/`, the rest per host
+
+| Host | What it is | Notes |
+| --- | --- | --- |
+| `desktop` | the workstation | nvidia, two screens, builds the server's closure and pushes it |
+| `laptop` | the mobile one | wireguard client, reaches the server from anywhere |
+| `server` | the homelab | headless optiplex, see below |
+
+> inventory and storage in [hosts/README.md](hosts/README.md)
+
+## Homelab
+> the server, every service behind one caddy with a wildcard cert, reachable on the lan and over wireguard, nothing exposed
+
+| Service | What for | Shape |
+| --- | --- | --- |
+| actual | budget | container |
+| mealie | recipes | container |
+| papra | documents, fed by the scanner over sftp | container, its own user |
+| immich | photos, the phone backs up over the tunnel | nixos module, postgres |
+| homepage | dashboard with the backup status | nixos module |
+| ntfy | push alerts to the phone: disk health, failed units | nixos module |
+| twitch drops miner | farms drops while nobody watches | container |
+
+- state on the m.2, bulk on the ironwolf, nightly restic to the my book and on to backblaze b2
+- smartd watches both usb disks, a failed unit reaches the phone within minutes
+- modules in [modules/README.md](modules/README.md), network and disks in [hosts/README.md](hosts/README.md)
+
 ## Components
 | Use Case                      | Application                       |
 | ----------------------------- | --------------------------------- |
@@ -46,13 +74,14 @@
     - `git clone git@github.com:j-milkovits/nix-config.git ~/nix-config`
 2. drop in your own `hardware-configuration.nix` under `hosts/<host>/`
 3. build and switch into the configuration
-    - `noglob sudo nixos-rebuild switch --flake ~/nix-config#<host>`
+    - `just switch`, or on a fresh machine before `just` exists: `noglob sudo nixos-rebuild switch --flake ~/nix-config#<host>`
 
 ### Update
 1. bump all flake inputs to their latest revisions
-    - `nix flake update --flake ~/nix-config`
+    - `just update`
 2. rebuild and switch into the new generation
-    - `noglob sudo nixos-rebuild switch --flake ~/nix-config#<host>`
+    - `just switch` on the machine itself
+    - `just switch-remote server` builds the server here and pushes it over ssh
 
 ## Why or why not?
 > should you get started with Nix(OS)?
