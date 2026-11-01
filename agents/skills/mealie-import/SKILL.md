@@ -14,10 +14,13 @@ description: Import a recipe from a URL (or from text) into the self-hosted Meal
 ## Workflow
 1. read the vocabulary live, never from memory: `foods`, `units`, `groups/labels`, `organizers/tags`, `organizers/categories`, `recipes` (all with `?perPage=-1`)
 2. read the recipe: the schema.org `Recipe` JSON-LD of the page (`curl -sSL -A "Mozilla/5.0"`, parse `<script type="application/ld+json">`, may sit inside `@graph`); a site that answers 403 is read with a fetch tool instead, its image is then added by hand
+    - a page without JSON-LD is read from its text; a PDF from `pdftotext -layout` (poppler) or by reading the page images
+    - fetch only the one recipe page - no sitemap or bulk crawling
 3. map each ingredient line to quantity / unit / food / note against the existing foods and units, translating German names
-4. show the preview and wait for the OK:
+4. show the preview, one recipe at a time, and wait for the OK:
     - table original line -> Mealie line, new foods marked with their proposed label
     - translated steps, category, tags, servings + yield, times, source url
+    - protein per serving estimated from the ingredients, never the site's stated macros
     - every adaptation the user asked for (scaling, swaps, removals, toppings), and open questions
 5. after the OK: create the new foods, create the empty recipe, patch the data, scrape only the image, read the recipe back and report it
 
@@ -42,15 +45,25 @@ Mealie's own url scraper and ingredient parser are not used: they create duplica
 - occasion -> `occasion/...` tag, cuisine -> `cuisine/...`, form -> `format/...`
 - protein tags by source: `protein/tofu`, `protein/tvp`, `protein/tempeh`, `protein/seitan`, `protein/legumes`
 - `time/quick`: total time 20 minutes or less
-- `diet/high_protein`: main dishes with an estimated 30 g protein or more per serving, never sides or components
+- `diet/high_protein`: meals (main, breakfast, snack) and protein bases (`Staple`) with an estimated 30 g protein or more per serving, never sides or sauces
+- protein below 30 g: offer more of the protein component (tofu, mince, soy granules, a smoked tofu topping) or a bigger portion - the recipe changes only with the user's OK
 - `mealprep`: keeps several days or freezes, eaten over multiple days
 - a new tag needs the user's OK and an entry in the vault note (see below)
 
+### Sources and sub-recipes
+- a recipe from a url carries it as `orgURL`; one from a PDF or the user's own has no `orgURL`, the source and page go in `description`
+- a recipe used as an ingredient of another (a chili as a filling, Chickwheat, mashed potatoes, homemade hummus) is linked, not copied: an ingredient with `referencedRecipe`, `food: null` and unit `serving`
+- a store-bought alternative to a sub-recipe stays a regular food, with the recipe named in the note
+- a shopping list built from a plan resolves these links itself - Mealie's own recursive add is unverified
+
 ### Amounts, servings, times
+- US units converted to g / ml; amounts rounded to German pack sizes (cans, 175 g smoked tofu, 500 ml passata)
 - servings = countable pieces where possible (steaks, skewers, rolls), else portions; `recipeYield` carries the word (`steaks`, `portions (150g)`)
+- rice 60 g dry per portion
 - liquids in ml, never decimal liters (Mealie renders 1.3 l as "1 ³/₁₀")
 - times as `X minutes` / `X hours Y minutes`, prep + cook adding up to total
 - no preheating: baking steps say "place in the cold oven" with 5-10 minutes more
+- kitchen: air fryer with two drawers, steamer basket, hand blender, a stand mixer and a hand mixer with dough hooks, one 12-cup muffin tin - no Instant Pot, no food processor, so steps use the stove version and the hand tools
 - toppings and serving items are ingredients with a note (`for topping`, `for serving`), no redundant notes (`fresh` on a Produce food)
 - section titles (`For the sauce`) when the source has them, no nutrition values
 
@@ -67,6 +80,7 @@ curl -X POST -H "Content-Type: application/json" "$B/recipes/<slug>/image" -d '{
 
 - the body shape for `PATCH /recipes/<slug>`: read one existing recipe and mirror it - two things it does not show:
     - `unit` and `food` are the full objects from the vocabulary reads, `unit: null` for counted items, `quantity: null` with unit `to taste`
+    - a sub-recipe ingredient adds `referencedRecipe: {id, name, slug}` of the linked recipe
     - `recipeIngredient`, `tags` and `recipeCategory` replace the whole list, so a single fix sends the read-back list with one entry changed
 - `PUT /foods/<id>` takes the full food object without its `label` field, with `labelId`, `name` or `householdsWithIngredientFood` changed
 - `POST /organizers/tags` with `{"name": "..."}` creates a tag
