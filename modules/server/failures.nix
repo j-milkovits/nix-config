@@ -14,6 +14,8 @@ let
     "podman-twitch-drops-miner"
     "immich-server"
     "immich-machine-learning"
+    "meal-plan-propose"
+    "meal-plan-list"
     "postgresql"
     "caddy"
     "smartd"

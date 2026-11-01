@@ -9,7 +9,7 @@ let
   port = 2586;
   topic = "server";
 
-  # `ntfy-send <title> <message>`, for smartd.nix, failures.nix and a shell on the box
+  # `ntfy-send <title> <message> [priority]`, priority defaults to high
   # posts over the loopback, so an alert does not depend on caddy or dns being up
   ntfySend = pkgs.writeShellApplication {
     name = "ntfy-send";
@@ -18,7 +18,7 @@ let
     text = ''
       curl --silent --show-error --output /dev/null \
         --header "Authorization: Bearer $(cat ${config.sops.secrets."ntfy-token".path})" \
-        --header "Title: $1" --header "Priority: high" \
+        --header "Title: $1" --header "Priority: ''${3:-high}" \
         --data "$2" \
         http://127.0.0.1:${toString port}/${topic}
     '';

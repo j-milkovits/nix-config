@@ -32,6 +32,7 @@ modules/
     ├── dashboard.nix  # homepage, links to every service, host resources and the backup status backup.nix writes
     ├── failures.nix   # OnFailure on every service unit, a crash is posted through ntfy.nix
     ├── immich.nix     # photos, the nixos module rather than a container: postgres and redis come wired up
+    ├── meal-plan.nix  # headless claude runs the meal-plan skill: the plan on fridays, the list on saturdays, summary via ntfy
     ├── ntfy.nix       # push alerts to the phone, `ntfy-send` for anything on the box
     ├── proxy.nix      # caddy + acme wildcard cert, tls in front of every service (dns: hosts/README.md)
     ├── scanner.nix    # chrooted sftp user for the brother, writes straight into papra's ingestion folder

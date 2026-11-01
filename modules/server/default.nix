@@ -5,6 +5,7 @@
     ./dashboard.nix
     ./failures.nix
     ./immich.nix
+    ./meal-plan.nix
     ./ntfy.nix
     ./proxy.nix
     ./scanner.nix
