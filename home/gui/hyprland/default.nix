@@ -77,7 +77,8 @@ let
     (lib.range 1 10);
 in
 {
-  home.packages = [ pkgs.hyprpicker ];
+  # the two tools the binds below call
+  home.packages = [ pkgs.hyprpicker pkgs.hyprshot ];
 
   wayland.systemd.target = "hyprland-session.target";
 
@@ -258,6 +259,7 @@ in
       (bind "${mod} + SHIFT + F" "hl.dsp.window.float({ action = \"toggle\" })")
       (bind "${mod} + F" "hl.dsp.window.fullscreen({ action = \"toggle\", mode = \"maximized\" })")
       (bind "${mod} + SHIFT + C" "hl.dsp.exec_cmd(\"hyprpicker | wl-copy\")")
+      (bind "${mod} + SHIFT + S" "hl.dsp.exec_cmd(\"hyprshot -m region --freeze -o ~/Pictures/Screenshots\")")
     ]
     ++ [
       # noctalia panels
