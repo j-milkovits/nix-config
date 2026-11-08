@@ -11,7 +11,6 @@ let
     "podman-actual"
     "podman-mealie"
     "podman-papra"
-    "podman-twitch-drops-miner"
     "immich-server"
     "immich-machine-learning"
     "meal-plan-propose"

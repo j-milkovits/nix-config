@@ -66,11 +66,6 @@ in
       '';
     };
 
-    virtualHosts."drops.${certName}" = {
-      useACMEHost = certName;
-      extraConfig = "reverse_proxy 127.0.0.1:8080";
-    };
-
     virtualHosts."immich.${certName}" = {
       useACMEHost = certName;
       # caddy caps neither body size nor proxy time by default, so multi-gigabyte uploads need nothing here

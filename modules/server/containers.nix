@@ -107,20 +107,12 @@ in
           DOCUMENT_STORAGE_MAX_UPLOAD_SIZE = toString (50 * 1024 * 1024);
         };
       };
-
-      # twitch drop farming, a fork of the upstream gui app that ships a web ui instead
-      containers.twitch-drops-miner = {
-        image = "docker.io/rangermix/twitch-drops-miner:1.2.6@sha256:4575f3c87bcd7bffb68d410638b0db4d2f6abd4982fb9cec6b429c3ee4cef3fb";
-        ports = [ "127.0.0.1:8080:8080" ];
-        volumes = [ "${stateDir "twitch-drops-miner"}:/app/data" ];
-        environment = commonEnv;
-      };
     };
   };
 
   # /var/lib uses the root fs
   systemd.services = lib.mkMerge [
-    (ensureState [ "actual" "mealie" "papra" "twitch-drops-miner" ])
+    (ensureState [ "actual" "mealie" "papra" ])
     {
       # /mnt/data is nofail, so without this papra can start with the bridge absent
       # and write documents into the bare mountpoint

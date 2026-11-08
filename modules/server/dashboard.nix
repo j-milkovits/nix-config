@@ -22,7 +22,6 @@ let
     (icon "svg/immich.svg" "sha256-pdSkOJnmP/x+lyRgNPf2PN/cQQqoA8VxPVRSkGAcTYk=")
     (icon "svg/ntfy.svg" "sha256-XhFVsC6NgZ65AksSRN1janc5MJGNiKyRdgInX7nEKZE=")
     (icon "svg/papra.svg" "sha256-YRm+T9QTOcVxYen+T02xykVwRDJaIWaywWoQBQ3LYfE=")
-    (icon "svg/twitch.svg" "sha256-qOs2UUfWBuxJjqbmVeHhOX7lwL28CWRk1Jbm8vMaHGk=")
     (icon "png/restic.png" "sha256-KbtcVMIIxeF7h80mtJjj7mZ62Ui/wDFw/o2A+liBo2w=")
     (icon "svg/backblaze.svg" "sha256-/9jOhQi2qPqmvluo5HDBvYeNmyf+e4sKDvP0etn/v0E=")
   ];
@@ -82,7 +81,7 @@ in
       # a list, not an attrset: nix sorts attribute names, and the order here is the order on the page
       # row groups take the full width, so backups sit below services instead of beside them
       layout = [
-        { "Services" = { style = "row"; columns = 6; }; }
+        { "Services" = { style = "row"; columns = 5; }; }
         { "Backups" = { style = "row"; columns = 2; }; }
       ];
     };
@@ -94,7 +93,6 @@ in
           { "Mealie" = service { name = "mealie"; port = 9000; icon = "mealie.svg"; description = "recipes"; }; }
           { "Papra" = service { name = "papra"; port = 1221; icon = "papra.svg"; description = "documents"; }; }
           { "Immich" = service { name = "immich"; port = config.services.immich.port; icon = "immich.svg"; description = "photos"; }; }
-          { "Drops" = service { name = "drops"; port = 8080; icon = "twitch.svg"; description = "twitch drops"; }; }
           { "Ntfy" = service { name = "ntfy"; port = 2586; icon = "ntfy.svg"; description = "alerts"; }; }
         ];
       }

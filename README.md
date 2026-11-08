@@ -50,7 +50,6 @@
 | immich | photos, the phone backs up over the tunnel | nixos module, postgres |
 | homepage | dashboard with the backup status | nixos module |
 | ntfy | push alerts to the phone: disk health, failed units | nixos module |
-| twitch drops miner | farms drops while nobody watches | container |
 
 - state on the m.2, bulk on the ironwolf, nightly restic to the my book and on to backblaze b2
 - smartd watches both usb disks, a failed unit reaches the phone within minutes
