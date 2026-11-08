@@ -80,8 +80,10 @@ in
 
       # preStart, units are down before restic reads a page
       backupPrepareCommand = "${systemctl} stop ${lib.concatStringsSep " " stopUnits}";
-      # postStop, runs even when the backup fails
-      backupCleanupCommand = "${systemctl} start ${lib.concatStringsSep " " stopUnits}";
+      # postStop, runs even when the backup fails - the smartd restart pins its daily check to this moment,
+      # the one time the my book is awake (modules/server/smartd.nix)
+      backupCleanupCommand = "${systemctl} start ${lib.concatStringsSep " " stopUnits}; ${systemctl} restart smartd";
+
 
       timerConfig = {
         OnCalendar = "03:00";

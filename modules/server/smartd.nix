@@ -25,13 +25,13 @@ in
     };
 
     # short test saturdays 05:00, long test on the first of the month 05:00, a missed slot runs at the next check
-    # -n skips a sleeping disk, at most seven times
-    defaults.monitored = "-a -S on -n standby,7,q -s (S/../../6/05|L/../01/./05) -m <nomailer> -M exec ${hook}";
+    # -n skips a sleeping disk, the my book is awake after the backup and backup.nix restarts smartd right then
+    defaults.monitored = "-a -S on -n standby,q -s (S/../../6/05|L/../01/./05) -m <nomailer> -M exec ${hook}";
 
     # -d sat, both bridges pass the ata commands through
     devices = map (device: { inherit device; options = "-d sat"; }) disks;
 
-    # once a day, the default of thirty minutes kept the my book spinning at 63 degrees
+    # once a day, the restart in backup.nix pins it to the end of the backup
     extraOptions = [ "--interval=86400" ];
   };
 }

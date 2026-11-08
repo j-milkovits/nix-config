@@ -23,7 +23,7 @@ let
 
   # a unit that is back within this is a blip, not an incident
   # a crash the restart policy fixes stays silent, a crash loop ends with systemd giving up and the unit still down
-  gracePeriod = "5min";
+  gracePeriod = "5m";
 in
 {
   systemd.services = {
