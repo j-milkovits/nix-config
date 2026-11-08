@@ -62,7 +62,7 @@ in
 
       # personal finance
       containers.actual = {
-        image = "ghcr.io/actualbudget/actual:sha-3b2f89e@sha256:2d95396914c62212230d3cc7dd9f7bd9eba2da46696e5e4d4a6dfac4bdbaa5a1";
+        image = "ghcr.io/actualbudget/actual:26.11.0@sha256:06cf186569cf58d93e12659ff1a517b65b5b0ebee7050a3991d4bd8a1d398da6";
         # localhost only, caddy terminates tls in front of it (modules/server/proxy.nix)
         ports = [ "127.0.0.1:5006:5006" ];
         volumes = [ "${stateDir "actual"}:/data" ];
