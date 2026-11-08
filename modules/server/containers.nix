@@ -83,7 +83,7 @@ in
 
       # documents
       containers.papra = {
-        image = "ghcr.io/papra-hq/papra:26.6.2-rootless@sha256:a281cb44176dbe5323e0f7ea2d6fd34d58914a3a8525c36437a086d1d7c4fef8";
+        image = "ghcr.io/papra-hq/papra:26.7.1-rootless@sha256:d1f596a35332ad04d8a69d88a5e19bc82acd47f2bc2fe687dd2145b1ef5a8b19";
         # the host user below, so the process is not root on the host and its files are owned by a name
         user = "${toString papraId}:${toString papraId}";
         ports = [ "127.0.0.1:1221:1221" ];
