@@ -71,7 +71,7 @@ in
 
       # recipes
       containers.mealie = {
-        image = "ghcr.io/mealie-recipes/mealie:v3.21.0@sha256:4e1e8d98b883009cb849851857e277109c21db1c2d857ae61e14de894f2169ff";
+        image = "ghcr.io/mealie-recipes/mealie:v3.30.0@sha256:90f83da6f3ab0a421efc827118a556168573930105f13fa3321768f42163d784";
         ports = [ "127.0.0.1:9000:9000" ];
         volumes = [ "${stateDir "mealie"}:/app/data" ];
         environment = commonEnv // {
