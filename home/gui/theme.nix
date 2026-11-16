@@ -1,4 +1,5 @@
 { config
+, lib
 , pkgs
 , ...
 }:
@@ -37,9 +38,11 @@ in
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  # the one port without a global enable - one cursor and one size for hyprland, gtk apps and xwayland
-  catppuccin.cursors.enable = true;
+  # one cursor and one size for hyprland, gtk apps and xwayland
+  # from nixpkgs, which has it on the binary cache - the catppuccin module's own build runs locally on every update
   home.pointerCursor = {
+    name = "catppuccin-${flavor}-${accent}-cursors";
+    package = pkgs.catppuccin-cursors."${flavor}${lib.toSentenceCase accent}";
     size = 24;
     gtk.enable = true;
     hyprcursor.enable = true;
