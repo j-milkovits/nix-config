@@ -17,7 +17,10 @@
 
     # keybindings = [ ]; 
 
-    # settings = {};
+    settings = {
+      # kitty restores the last closed window's maximize state, hyprland owns window state instead
+      remember_window_size = false;
+    };
 
   };
 
